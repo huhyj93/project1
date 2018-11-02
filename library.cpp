@@ -45,4 +45,5 @@ void library ::set(){
 	cout << date[i] << "    " << mem[i].type << "   " << mem[i].name << endl;
 	i++;
 	}
+	cout << "change hihi" << endl;
 }
