@@ -8,7 +8,7 @@ class member{
 		int late;
 		int date;
 		int booknum;	
-		book rent[300];
+		book rent[30];
 };
 
 class undergraduate : public member{
