@@ -1,4 +1,4 @@
-# SSE3:project1
+# SSE3: Project1
 
 ## Library Management
 
@@ -22,8 +22,27 @@ int main(){
 	Library.process();
 }
 ```
+More explanations of functions are in code.
 
-Also, I make Makefile. So, when you want to compile, just enter **make** and then **hello** file is created. Then, you just implement that program. 
+##Compile Method
+
+I make Makefile.
+
+``` 
+# Makefile
+
+hello: main.o library.o
+	g++ -o hello main.o library.o 
+main.o: main.cpp
+	g++ -c main.cpp	
+library.o: library.cpp
+	g++ -c library.cpp	
+clean:	
+	rm *.o hello
+```
+
+So, just enter **make** and then **hello** file is created. 
+Then, you just implement that program. 
 
 ## Author : Yang Jun Huh
 
