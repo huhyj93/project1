@@ -5,6 +5,7 @@ class resource{
 		string name;
 		int state;
 		string type;
+		int date;
 };
 
 class book: public resource{

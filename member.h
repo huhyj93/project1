@@ -1,9 +1,14 @@
 #include <string>
-
+#include "resource.h"
 class member{
 	public:
 		string name;
-		string type;
+		string books;
+		int state;
+		int late;
+		int date;
+		int booknum;	
+		book rent[300];
 };
 
 class undergraduate : public member{
