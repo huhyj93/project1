@@ -92,7 +92,7 @@ void library :: process(){
 											Undergraduate[j].state = 0;
 										}
 										//late return
-									/*	else{
+										else{
 											Undergraduate[j].state = 2;
 											Undergraduate[j].late = day - Book[i].date -13;
 
@@ -114,7 +114,7 @@ void library :: process(){
 												fin2 << "0" << date[2] <<  endl;
 										
 											}
-										}*/
+										}
 									}
 									//didn't match borrow book	
 									else{
