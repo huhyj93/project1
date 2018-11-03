@@ -7,8 +7,8 @@ Compositions is *member.h*, *resource.h*, *library.h*, and this project realize 
 There are two function in *library.h* that manage library.
 
 ```
-		void set();
-		void process();
+void set();
+void process();
 ```
 		 
 First fuction is *set()* that reads *resource.dat* file and save data into book.
@@ -24,7 +24,7 @@ int main(){
 ```
 More explanations of functions are in code.
 
-##Compile Method
+## Compile Method
 
 I make Makefile.
 
