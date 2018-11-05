@@ -36,9 +36,19 @@ class member{
  *library.h* has library class. There are two function in *library.h* that manage library.
 
 ```
-void set();
-void process();
-
+class library{
+	public: 
+		book Book[30];
+		magazine Magazine[30];
+	       	e_book Ebook[30];
+		undergraduate Undergraduate[30];
+		graduate Graduate[30];
+		faculty Faculty[30];
+		int n[6];
+		void set();
+		void process();
+};
+ 
 ```
 		 
  First fuction is *set()* that reads *resource.dat* file and save data into book.
