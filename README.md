@@ -1,8 +1,10 @@
 # SSE3: Project1
 
-## Library Management
+This project's purpose is to implement Library Management. So, when we enter books and process about borrow or return, the program handle their work and make result.
 
-This project makes library management system using three header file.
+## Running
+
+I make library management system using three header file.
 Compositions is *member.h*, *resource.h*, *library.h*, and this project realize undergraduate under member and book under resource. 
 There are two function in *library.h* that manage library.
 
@@ -24,7 +26,7 @@ int main(){
 ```
 More explanations of functions are in code.
 
-## Compile Method
+## Getting started
 
 I make Makefile.
 
@@ -43,6 +45,10 @@ clean:
 
 So, just enter **make** and then **hello** file is created. 
 Then, you just implement that program. 
+
+## Versioning
+
+Using **c++** language in Ubuntu environment
 
 ## Author : Yang Jun Huh
 
