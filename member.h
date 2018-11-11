@@ -1,5 +1,6 @@
 #include <string>
 #include "resource.h"
+#include "space.h"
 class member{
 	public:
 		string name;
@@ -8,10 +9,15 @@ class member{
 		int late;
 		int date;
 		int booknum;	
-		book rent[30];
+		
 };
 
 class undergraduate : public member{
+	public:
+		book rent[2];
+		studyroom sr;
+		seat st;
+		void clear();
 };
 
 class graduate: public member{

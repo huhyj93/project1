@@ -6,9 +6,13 @@ class library{
 		book Book[30];
 		magazine Magazine[30];
 	       	e_book Ebook[30];
-		undergraduate Undergraduate[30];
+		undergraduate Undergraduate[100];
 		graduate Graduate[30];
 		faculty Faculty[30];
+		studyroom Sroom[10];
+		seat seat1[50];
+		seat seat2[50];
+		seat seat3[50];
 		string idat[50][6];
 		int idatnum;
 		int idattime[50];
@@ -21,9 +25,10 @@ class library{
 		void setidat();
 		void setsdat();
 		void write(int op, int rc, int time);
-		void bprocess(int op);
+		void bookprocess(int op);
+		void studyroomprocess(int op);
+		void seatprocess(int op);
 		void process();
-		void fprocess();
 };
 
 		 

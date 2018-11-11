@@ -6,10 +6,5 @@
 
 int main(){
 	library Library;
-	Library.set();
-	Library.setidat();
-	cout << "----------------------------------------" << endl;
-	Library.setsdat();
-	cout << "----------------------------------------" << endl;
-	Library.fprocess();
+	Library.process();
 }
