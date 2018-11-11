@@ -20,9 +20,10 @@ class library{
 		void set();
 		void setidat();
 		void setsdat();
-		void write_output(int op, int time);
-		void test();
+		void write(int op, int rc, int time);
+		void bprocess(int op);
 		void process();
+		void fprocess();
 };
 
 		 

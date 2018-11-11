@@ -11,5 +11,5 @@ int main(){
 	cout << "----------------------------------------" << endl;
 	Library.setsdat();
 	cout << "----------------------------------------" << endl;
-	Library.test();
+	Library.fprocess();
 }
