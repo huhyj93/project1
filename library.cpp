@@ -24,14 +24,32 @@ void library ::set(){
 	}
 	fin.close();
 }
-void library :: write_output(int op, int time){
-	
-	switch(op){
-		case 1:
-			out << "number1" << endl;
+void library :: write(int op, int rc,  int time){
+	out << op << "	";
+	switch(rc){
+		case 0:
+			out << "0	Sucess." << endl;
 			break;
+		case 1:
+			out << "1	Non exist resource." << endl;
+			break;	
 		case 2:
-			out << "number2" << endl;
+			out << "2	Exceeds your possible number of borrow. Possible# of borrows: 1" << endl;
+			break;
+		case 3:
+			out << "3	You did not borrow this book." << endl;
+			break;	
+		case 4:
+			out << "4	You already borrowed this book at" << endl;
+			break;	
+		case 5:
+			out << "5	Other member already borrowed this book. This book will be returned at" << endl;
+			break;
+		case 6:
+			out << "6	Restricted member until" << endl;
+			break;	
+		case 7:
+			out << "7	Delayed return. You'll be restricted until" << endl;
 			break;	
 		default:
 			break;
@@ -39,10 +57,10 @@ void library :: write_output(int op, int time){
 }
 void library :: test(){
 	out.open("output.dat");
-	write_output(1,0);
-	write_output(2,0);
-	write_output(2,0);
-	write_output(1,0);
+	write(1,1,0);
+	write(2,2,0);
+	write(3,3,0);
+	write(4,5,0);
 	out.close();
 }
 void library :: setidat(){
