@@ -24,6 +24,51 @@ void library ::set(){
 	}
 	fin.close();
 }
+void library :: setidat(){
+	ifstream fin;
+	fin.open("input.dat");
+	int i=0;
+	int j=0;
+	string dump;
+	for(j=0;j<6;j++){
+		fin >> dump;
+	}
+	
+	while(fin){
+		for(j=0;j<6;j++){
+			fin >> idat[i][j];
+		}
+		i++;
+	}
+	idatnum =i-1;
+	fin.close();
+}
+
+void library :: setsdat(){
+
+	ifstream fin;
+	fin.open("space.dat");
+	int i=0;
+	int j=0;
+	string dump;
+	for(j=0;j<8;j++){
+		fin >> dump;
+	}
+	
+	while(fin){
+		for(j=0;j<8;j++){
+			fin >> sdat[i][j];
+			if(j ==5){
+				if( sdat[i][3] == "R"){
+					break;	
+				}
+			}
+		}
+		i++;
+	}
+	sdatnum =i-1;
+	fin.close();
+}
 void library :: process(){
 	string dump;
 	string temp[6];
@@ -319,5 +364,4 @@ void library :: process(){
 	}
 	fin.close();	
 	fin2.close();
-	cout << " branch sucess" << endl;
 }
