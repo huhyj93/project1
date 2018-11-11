@@ -10,4 +10,6 @@ int main(){
 	Library.setidat();
 	cout << "----------------------------------------" << endl;
 	Library.setsdat();
+	cout << "----------------------------------------" << endl;
+	Library.test();
 }

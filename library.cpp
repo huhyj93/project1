@@ -24,6 +24,27 @@ void library ::set(){
 	}
 	fin.close();
 }
+void library :: write_output(int op, int time){
+	
+	switch(op){
+		case 1:
+			out << "number1" << endl;
+			break;
+		case 2:
+			out << "number2" << endl;
+			break;	
+		default:
+			break;
+	}
+}
+void library :: test(){
+	out.open("output.dat");
+	write_output(1,0);
+	write_output(2,0);
+	write_output(2,0);
+	write_output(1,0);
+	out.close();
+}
 void library :: setidat(){
 	ifstream fin;
 	fin.open("input.dat");
@@ -42,6 +63,18 @@ void library :: setidat(){
 	}
 	idatnum =i-1;
 	fin.close();
+	int date[3];
+	char t[2];
+	for(i=0; i<idatnum; i++){
+		date[0] = atoi(idat[i][0].c_str());
+		t[0] = idat[i][0].at(3);
+		t[1] = idat[i][0].at(4);
+		date[1] =atoi(t);
+		t[0] = idat[i][0].at(6);
+		t[1] = idat[i][0].at(7);
+		date[2] =atoi(t);
+		idattime[i] = 360*date[0] + 30*date[1] + date[2];
+	}
 }
 
 void library :: setsdat(){
@@ -68,6 +101,23 @@ void library :: setsdat(){
 	}
 	sdatnum =i-1;
 	fin.close();
+	int date[3];
+	char t[2];
+	for(i=0; i<sdatnum; i++){
+		t[0] = sdat[i][0].at(2);
+		t[1] = sdat[i][0].at(3);
+		date[0] =atoi(t);
+		t[0] = sdat[i][0].at(5);
+		t[1] = sdat[i][0].at(6);
+		date[1] =atoi(t);
+		t[0] = sdat[i][0].at(8);
+		t[1] = sdat[i][0].at(9);
+		date[2] =atoi(t);
+		t[0] = sdat[i][0].at(11);
+		t[1] = sdat[i][0].at(12);
+		date[0] =atoi(t);
+		sdattime[i][1] =date[0];
+	}
 }
 void library :: process(){
 	string dump;
