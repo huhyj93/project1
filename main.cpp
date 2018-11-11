@@ -7,5 +7,7 @@
 int main(){
 	library Library;
 	Library.set();
-	Library.process();
+	Library.setidat();
+	cout << "----------------------------------------" << endl;
+	Library.setsdat();
 }
