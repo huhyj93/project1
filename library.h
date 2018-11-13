@@ -13,12 +13,12 @@ class library{
 		seat seat1[50];
 		seat seat2[50];
 		seat seat3[50];
-		string idat[50][6];
+		string idat[100][6];
 		int idatnum;
-		int idattime[50];
-		string sdat[50][8];
+		int idattime[100];
+		string sdat[100][8];
 		int sdatnum;
-		int sdattime[50][2];
+		int sdattime[100][2];
 		int n[6];
 		ofstream out;
 		void set();
