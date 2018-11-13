@@ -101,8 +101,8 @@ void library :: setsdat(){
 	}
 }
 
-void library :: write(int op, int rc,  int time){
-	out << op << "	";
+void library :: write(int top,int op, int rc,  int time){
+	out << top << "	";
 	int y,m,d;
 	
 	switch(rc){
@@ -186,7 +186,7 @@ void library :: write(int op, int rc,  int time){
 	}
 }
 
-void library :: bookprocess(int op){
+void library :: bookprocess(int top,int op){
 	int i,j,k;
 	int flag =0;
 	int flag2 =0 ;	
@@ -198,7 +198,7 @@ void library :: bookprocess(int op){
 				if(idat[op-1][3] == "R"){
 					//member check
 					if(n[3] == 0)
-						write(op,3,0);
+						write(top,op,3,0);
 					
 					else
 					{
@@ -208,7 +208,7 @@ void library :: bookprocess(int op){
 								flag2 =1;
 								//not borrow 
 								if(Undergraduate[j].state != 1)
-									write(op,3,0);
+									write(top,op,3,0);
 								
 								//borrow
 								else{
@@ -217,7 +217,7 @@ void library :: bookprocess(int op){
 										//need late or not
 										//sucess return
 										if( (idattime[op-1] - Book[i].date) <14){
-											write(op,0,0);
+											write(top,op,0,0);
 											Undergraduate[j].state = 0;
 										}
 										//late return
@@ -225,12 +225,12 @@ void library :: bookprocess(int op){
 											Undergraduate[j].state = 2;
 											Undergraduate[j].late = idattime[op-1] - Book[i].date -13;
 											Undergraduate[j].date = idattime[op-1] + Undergraduate[j].late;
-											write(op,7,idattime[op-1] + Undergraduate[j].late);
+											write(top,op,7,idattime[op-1] + Undergraduate[j].late);
 										}
 									}
 									//didn't match borrow book	
 									else
-										write(op,3,0);
+										write(top,op,3,0);
 													
 								}
 
@@ -238,7 +238,7 @@ void library :: bookprocess(int op){
 						}
 					 	//if didn't enter member	
 						if(flag2 == 0){
-							write(op,3,0);
+							write(top,op,3,0);
 						}
 						flag2=0;
 					}
@@ -251,7 +251,7 @@ void library :: bookprocess(int op){
 						Undergraduate[n[3]].name = idat[op-1][5];
 						//if book is not here
 						if( Book[i].state == 1)
-							write(op,5,Book[i].date + 13);
+							write(top,op,5,Book[i].date + 13);
 						
 						// if book is here
 						else{
@@ -261,7 +261,7 @@ void library :: bookprocess(int op){
 							Book[i].date = idattime[op-1];
 							Undergraduate[n[3]].rent[Undergraduate->booknum] = Book[i];
 							Undergraduate[n[3]].booknum++;
-							write(op,0,0);
+							write(top,op,0,0);
 						}
 						n[3]++;	
 					}
@@ -277,14 +277,14 @@ void library :: bookprocess(int op){
 									Undergraduate[j].state = 0;
 								//one more borrow
 								if(Undergraduate[j].state == 1){
-									write(op,2,0);
+									write(top,op,2,0);
 									break;
 								}
 								//check already borrow
 								for(k=0;k<(Undergraduate->booknum); k++){
 									if( Book[i].name == Undergraduate->rent[k].name){
 										flag3=1;
-										write(op,4, Undergraduate ->rent[k].date);		
+										write(top,op,4, Undergraduate ->rent[k].date);		
 									}
 								}
 								if(flag3 ==1){
@@ -293,13 +293,13 @@ void library :: bookprocess(int op){
 								}
 									//check book have
 									if( Book[i].state == 1){
-										write(op,5,Book[i].date + 13);
+										write(top,op,5,Book[i].date + 13);
 										break;
 									}
 
 									//check restrict member
 									if( Undergraduate[j].state ==2 )
-										write(op,6,Undergraduate[j].date);
+										write(top,op,6,Undergraduate[j].date);
 									
 									//success borrow
 									else{
@@ -309,7 +309,7 @@ void library :: bookprocess(int op){
 										Book[i].date = idattime[op-1];
 										Undergraduate[j].rent[Undergraduate->booknum] = Book[i];
 										Undergraduate[j].booknum++;
-										write(op,0,0);
+										write(top,op,0,0);
 									}
 							}
 
@@ -319,7 +319,7 @@ void library :: bookprocess(int op){
 							Undergraduate[n[3]].clear();
 							Undergraduate[n[3]].name = idat[op-1][5];
 							if( Book[i].state == 1)
-								write(op,5,Book[i].date + 13);
+								write(top,op,5,Book[i].date + 13);
 							else{
 								Undergraduate[n[3]].books = idat[op][2];
 								Book[i].state = 1;
@@ -327,7 +327,7 @@ void library :: bookprocess(int op){
 								Book[i].date = idattime[op-1];
 								Undergraduate[n[3]].rent[Undergraduate->booknum] = Book[i];
 								Undergraduate[n[3]].booknum++;
-								write(op,0,0);
+								write(top,op,0,0);
 							}
 							n[3]++;	
 						}	
@@ -337,7 +337,7 @@ void library :: bookprocess(int op){
 			}
 		}		
 		if(flag == 0){
-			write(op,1,0);
+			write(top,op,1,0);
 		}	
 		flag = 0;
 }
@@ -422,7 +422,7 @@ void library :: roomclear(int type,int op){
 		}	
 	}
 }
-void library :: studyroomprocess(int op){
+void library :: studyroomprocess(int top,int op){
 	int i,j,k;
 	int flag = 0;
 	int snum,mnum,time;
@@ -431,10 +431,10 @@ void library :: studyroomprocess(int op){
 	time = atoi(sdat[op-1][7].c_str());
 	roomclear(1,op);
 	if((snum> 10)||(snum <1))
-		write(op,8,0);
+		write(top,op,8,0);
 	else{
 		if((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))
-			write(op,9,0);
+			write(top,op,9,0);
 		else{
 			//check first member
 			for(i=0;i<n[3];i++){
@@ -446,17 +446,17 @@ void library :: studyroomprocess(int op){
 			if(sdat[op-1][3] == "B"){
 				if(flag ==1){
 					if(Undergraduate[i].sr.state == 1)
-						write(op,11,0);
+						write(top,op,11,0);
 					else{
 						
 						if((mnum > 6)|| (mnum <1)){
-							write(op,12,0);
+							write(top,op,12,0);
 						}
 						else if((time > 3) ||(time <1)){
-							write(op,13,0);
+							write(top,op,13,0);
 						}
 						else if(sroom[snum].state == 0){
-							write(op,0,0);
+							write(top,op,0,0);
 							sroom[snum].day = sdattime[op-1][0];
 							sroom[snum].start = sdattime[op-1][1];
 							sroom[snum].during = time;
@@ -464,20 +464,20 @@ void library :: studyroomprocess(int op){
 							Undergraduate[i].sr= sroom[snum];
 						}
 						else
-							write(op,14,sroom[snum].during+sroom[snum].start);
+							write(top,op,14,sroom[snum].during+sroom[snum].start);
 					}	
 				}	
 				else{
 					Undergraduate[n[3]].clear();
 					Undergraduate[n[3]].name = sdat[op-1][5];
 					if((mnum > 6)|| (mnum <1)){
-						write(op,12,0);
+						write(top,op,12,0);
 					}
 					else if((time > 3) ||(time <1)){
-						write(op,13,0);
+						write(top,op,13,0);
 					}
 					else if(sroom[snum].state == 0){
-						write(op,0,0);
+						write(top,op,0,0);
 						sroom[snum].day = sdattime[op-1][0];
 						sroom[snum].start = sdattime[op-1][1];
 						sroom[snum].during = time;
@@ -485,50 +485,50 @@ void library :: studyroomprocess(int op){
 						Undergraduate[n[3]].sr= sroom[snum];
 					}
 					else
-						write(op,14,sroom[snum].during+sroom[snum].start);
+						write(top,op,14,sroom[snum].during+sroom[snum].start);
 					n[3]++;
 				}
 			}
 			
 			else if(sdat[op-1][3] == "R"){
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 					if(sroom[snum].state == 1){
-						write(op,0,0);
+						write(top,op,0,0);
 						sroom[snum].clear();
 						Undergraduate[i].sr.clear();
 					}
 					else
-						write(op,10,0);
+						write(top,op,10,0);
 				}
 			}
 			
 			else if(sdat[op-1][3] == "E"){
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 					if(sroom[snum].state == 1){
-						write(op,0,0);
+						write(top,op,0,0);
 						sroom[snum].state = 2;
 						Undergraduate[i].sr = sroom[snum];
 					}
 					else
-						write(op,10,0);
+						write(top,op,10,0);
 			
 				}
 			}
 			else if(sdat[op-1][3] == "C"){
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 					if(sroom[snum].state == 2){
-						write(op,0,0);
+						write(top,op,0,0);
 						sroom[snum].state = 1;
 						Undergraduate[i].sr= sroom[snum];
 					}
 					else
-						write(op,10,0);
+						write(top,op,10,0);
 			
 				}
 			}
@@ -537,7 +537,7 @@ void library :: studyroomprocess(int op){
 	}
 }
 
-void library :: seatprocess(int op){
+void library :: seatprocess(int top,int op){
 	int i,j,k;
 	int flag = 0;
 	int snum,mnum,time;
@@ -547,12 +547,12 @@ void library :: seatprocess(int op){
 	time = atoi(sdat[op-1][7].c_str());
 	roomclear(2,op);
 	if((snum> 3)||(snum <1))
-		write(op,8,0);
+		write(top,op,8,0);
 	else{
 		if(((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))&& (snum == 3))
-			write(op,9,0);
+			write(top,op,9,0);
 		else if(((sdattime[op-1][1] >21)||(sdattime[op-1][1]<9))&&(snum == 2))
-			write(op,9,1);
+			write(top,op,9,1);
 		else{
 			//check first member
 			for(i=0;i<n[3];i++){
@@ -565,20 +565,20 @@ void library :: seatprocess(int op){
 			if(sdat[op-1][3] == "B"){
 				if(flag ==1){
 					if(Undergraduate[i].st.state != 0)
-						write(op,11,0);
+						write(top,op,11,0);
 					else{
 						
 						if(mnum > 1){
-							write(op,12,0);
+							write(top,op,12,0);
 						}
 						else if((time > 3) ||(time <1)){
-							write(op,13,0);
+							write(top,op,13,0);
 						}
 						else{
 							for(j=0;j<50;j++){
 								if(snum == 1){
 									if(seat1[j].state == 0){
-										write(op,0,0);
+										write(top,op,0,0);
 										seat1[j].day = sdattime[op-1][0];
 										seat1[j].start = sdattime[op-1][1];
 										if(seat1[j].start + time > 23)
@@ -599,12 +599,12 @@ void library :: seatprocess(int op){
 													temp = seat1[k].start+seat1[k].during;
 											}
 										}
-										write(op,14,temp);
+										write(top,op,14,temp);
 									}
 								}
 								else if(snum == 2){
 									if(seat2[j].state == 0){
-										write(op,0,0);
+										write(top,op,0,0);
 										seat2[j].day = sdattime[op-1][0];
 										seat2[j].start = sdattime[op-1][1];
 										if(seat2[j].start + time > 20)
@@ -625,13 +625,13 @@ void library :: seatprocess(int op){
 													temp = seat2[k].start+seat2[k].during;
 											}
 										}
-										write(op,14,temp);
+										write(top,op,14,temp);
 									}
 								}
 
 								else if(snum == 3){
 									if(seat3[j].state == 0){
-										write(op,0,0);
+										write(top,op,0,0);
 										seat3[j].day = sdattime[op-1][0];
 										seat3[j].start = sdattime[op-1][1];
 										if(seat3[j].start + time > 17)
@@ -652,7 +652,7 @@ void library :: seatprocess(int op){
 													temp = seat3[k].start+seat3[k].during;
 											}
 										}
-										write(op,14,temp);
+										write(top,op,14,temp);
 									}
 								}
 
@@ -664,16 +664,16 @@ void library :: seatprocess(int op){
 					Undergraduate[n[3]].clear();
 					Undergraduate[n[3]].name = sdat[op-1][5];
 					if(mnum > 1){
-						write(op,12,0);
+						write(top,op,12,0);
 					}
 					else if((time > 3) ||(time <1)){
-						write(op,13,0);
+						write(top,op,13,0);
 					}
 					else{
 						for(j=0;j<50;j++){
 							if(snum == 1){ 
 								if(seat1[j].state == 0){
-									write(op,0,0);
+									write(top,op,0,0);
 									seat1[j].day = sdattime[op-1][0];
 									seat1[j].start = sdattime[op-1][1];
 									if(seat1[j].start + time > 23)
@@ -694,12 +694,12 @@ void library :: seatprocess(int op){
 												temp = seat1[k].start+seat1[k].during;
 										}
 									}
-									write(op,14,temp);
+									write(top,op,14,temp);
 								}
 							}
 							else if(snum == 2){
 								if(seat2[j].state == 0){
-									write(op,0,0);
+									write(top,op,0,0);
 									seat2[j].day = sdattime[op-1][0];
 									seat2[j].start = sdattime[op-1][1];
 									if(seat2[j].start + time > 20)
@@ -720,12 +720,12 @@ void library :: seatprocess(int op){
 												temp = seat2[k].start+seat2[k].during;
 										}
 									}
-									write(op,14,temp);
+									write(top,op,14,temp);
 								}
 							}
 							else if(snum == 3){
 								if(seat3[j].state == 0){
-									write(op,0,0);
+									write(top,op,0,0);
 									seat3[j].day = sdattime[op-1][0];
 									seat3[j].start = sdattime[op-1][1];
 									if(seat3[j].start + time > 17)
@@ -746,7 +746,7 @@ void library :: seatprocess(int op){
 												temp = seat3[k].start+seat3[k].during;
 										}
 									}
-									write(op,14,temp);
+									write(top,op,14,temp);
 								}
 							}
 
@@ -757,96 +757,95 @@ void library :: seatprocess(int op){
 			}
 			
 			else if(sdat[op-1][3] == "R"){
-				cout << "check" << op <<  Undergraduate[i].name <<Undergraduate[i].st.state <<endl;
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 
 					for(j=0;j<50;j++){
 						if((Undergraduate[i].name == seat1[j].name) &&(Undergraduate[i].st.state !=0)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat1[j].clear();
 							Undergraduate[i].st.clear();
 							break;
 						}
 						if((Undergraduate[i].name == seat2[j].name) &&(Undergraduate[i].st.state !=0)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat2[j].clear();
 							Undergraduate[i].st.clear();
 							break;
 						}
 						if((Undergraduate[i].name == seat3[j].name) &&(Undergraduate[i].st.state !=0)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat3[j].clear();
 							Undergraduate[i].st.clear();
 							break;
 						}
 						if(j==49)
-							write(op,10,0);
+							write(top,op,10,0);
 					}
 				}
 			}
 			
 			else if(sdat[op-1][3] == "E"){
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 					for(j=0;j<50;j++){
 						if((Undergraduate[i].name == seat1[j].name) &&(Undergraduate[i].st.state ==1)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat1[j].state = 2;
 							seat1[j].etime = sdattime[op-1][1];			
 							Undergraduate[i].st = seat1[j];
 							break;
 						}
 						if((Undergraduate[i].name == seat2[j].name) &&(Undergraduate[i].st.state ==1)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat2[j].state = 2;
 							seat2[j].etime = sdattime[op-1][1];			
 							Undergraduate[i].st = seat2[j];
 							break;
 						}
 						if((Undergraduate[i].name == seat3[j].name) &&(Undergraduate[i].st.state ==1)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat3[j].state = 2;
 							seat3[j].etime = sdattime[op-1][1];			
 							Undergraduate[i].st = seat3[j];
 							break;
 						}
 						if(j==49)
-							write(op,10,0);
+							write(top,op,10,0);
 					}
 				}
 
 			}
 			else if(sdat[op-1][3] == "C"){
 				if(flag == 0)
-					write(op,10,0);
+					write(top,op,10,0);
 				else{
 					for(j=0;j<50;j++){
 						if((Undergraduate[i].name == seat1[j].name) &&(Undergraduate[i].st.state ==2)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat1[j].state = 1;
 							seat1[j].etime = 0;			
 							Undergraduate[i].st = seat1[j];
 							break;
 						}
 						if((Undergraduate[i].name == seat2[j].name) &&(Undergraduate[i].st.state ==2)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat2[j].state = 1;
 							seat2[j].etime = 0;			
 							Undergraduate[i].st = seat2[j];
 							break;
 						}
 						if((Undergraduate[i].name == seat3[j].name) &&(Undergraduate[i].st.state ==2)){
-							write(op,0,0);
+							write(top,op,0,0);
 							seat3[j].state = 1;
 							seat3[j].etime = 0;			
 							Undergraduate[i].st = seat3[j];
 							break;
 						}
 						if(j==49)
-							write(op,10,0);
+							write(top,op,10,0);
 					}
 			
 				}
@@ -863,12 +862,32 @@ void library :: process(){
 	out.open("output.dat");
 	n[3] = 0;
 	out << "Op_#	Return_code	Description" << endl;
-	int op;
-	for(op = 1;op<sdatnum+1;op++){
-		if(sdat[op-1][1] == "StudyRoom")
-			studyroomprocess(op);
-		else
-			seatprocess(op);
+	int sop=1;
+	int iop=1;
+	int top=1;
+	/*for(iop =1; iop<4 ; iop++){
+		bookprocess(iop);
+	}
+	for(sop =1; sop<5; sop++){
+			if(sdat[sop-1][1] == "StudyRoom")
+				studyroomprocess(sop);
+			else
+				seatprocess(sop);
+	}*/
+	while((iop<=idatnum)||(sop<=sdatnum)){
+		if((sdattime[sop-1][0] >= idattime[iop-1])&&(iop<=idatnum)){
+			bookprocess(top,iop);
+			iop++;
+		}
+		else{
+			if(sdat[sop-1][1] == "StudyRoom")
+				studyroomprocess(top,sop);
+			else{
+				seatprocess(top,sop);
+			}
+			sop++;
+		}
+		top++;
 	}
 	/*for(op = 1;op<idatnum+1;op++)
 		bookprocess(op);
