@@ -9,7 +9,7 @@ class library{
 		undergraduate Undergraduate[100];
 		graduate Graduate[30];
 		faculty Faculty[30];
-		studyroom Sroom[10];
+		studyroom sroom[10];
 		seat seat1[50];
 		seat seat2[50];
 		seat seat3[50];
@@ -26,6 +26,7 @@ class library{
 		void setsdat();
 		void write(int op, int rc, int time);
 		void bookprocess(int op);
+		void roomclear(int type,int op);
 		void studyroomprocess(int op);
 		void seatprocess(int op);
 		void process();

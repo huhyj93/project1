@@ -3,7 +3,9 @@
 class space{
 	public:
 		int state;
-		int time;
+		int start;
+		int during;
+		int num;
 		void clear();
 };
 

@@ -149,7 +149,7 @@ void library :: write(int op, int rc,  int time){
 			out << "13	Exceed available time." << endl;
 			break;
 		case 14:
-			out << "14	There is no remain space. This space is available after " << endl;
+			out << "14	There is no remain space. This space is available after " ;
 			break;	
 		default:
 			break;
@@ -170,6 +170,11 @@ void library :: write(int op, int rc,  int time){
 		out.width(2); 
 		out << d; 
 		out <<endl;
+	}
+	if(rc == 14){
+		out << time;
+		out << "." << endl;
+		
 	}
 }
 
@@ -328,6 +333,25 @@ void library :: bookprocess(int op){
 		}	
 		flag = 0;
 }
+void library :: roomclear(int type,int op){
+	int i;
+	if(type ==1 ){
+		for(i=0;i<10;i++){
+				if(sdattime[op-1][0] == sdattime[op-2][0]){
+					if(sroom[i].state == 1){
+						if( sroom[i].start + sroom[i].during < sdattime[op-1][1])
+							sroom[i].clear();
+					}
+				}
+				else
+					sroom[i].clear();
+		}
+	
+	}
+	else{
+	
+	}
+}
 void library :: studyroomprocess(int op){
 	int i,j,k;
 	int flag = 0;
@@ -336,29 +360,107 @@ void library :: studyroomprocess(int op){
 	mnum = atoi(sdat[op-1][6].c_str());
 	time = atoi(sdat[op-1][7].c_str());
 	cout << snum << "	" << mnum << "	"<< time <<endl;
+	roomclear(1,op);
 	if((snum> 10)||(snum <1))
 		write(op,8,0);
 	else{
 		if((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))
 			write(op,9,0);
 		else{
-			//for(i=0;i<
+			//check first member
+			for(i=0;i<n[3];i++){
+				if(Undergraduate[i].name == sdat[op-1][5]){
+					flag ==1;
+					break;
+				}
+			}
 			if(sdat[op-1][3] == "B"){
-			
+				if(flag ==1){
+					if(Undergraduate[i].sr.state == 0)
+						write(op,11,0);
+					else{
+						
+						if((mnum > 6)|| (mnum <1)){
+							write(op,12,0);
+						}
+						else if((time > 3) ||(time <1)){
+							write(op,13,0);
+						}
+						else if(sroom[snum].state == 0){
+							write(op,0,0);
+							sroom[snum].start = sdattime[op-1][1];
+							sroom[snum].during = time;
+							sroom[snum].state = 1;
+							Undergraduate[i].sr.state = 1;
+						}
+						else
+							write(op,14,sroom[snum].during+sroom[snum].start);
+					}	
+				}	
+				else{
+					Undergraduate[n[3]].clear();
+					Undergraduate[n[3]].name = sdat[op-1][5];
+					if((mnum > 6)|| (mnum <1)){
+						write(op,12,0);
+					}
+					else if((time > 3) ||(time <1)){
+						write(op,13,0);
+					}
+					else if(sroom[snum].state == 0){
+						write(op,0,0);
+						sroom[snum].start = sdattime[op-1][1];
+						sroom[snum].during = time;
+						sroom[snum].state =1;
+						Undergraduate[n[3]].sr.state = 1;
+					}
+					else
+						write(op,14,sroom[snum].during+sroom[snum].start);
+				}
 			}
 			
 			else if(sdat[op-1][3] == "R"){
-			
+				if(flag == 0)
+					write(op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(op,0,0);
+						sroom[snum].clear();
+						Undergraduate[i].sr.clear();
+					}
+					else
+						write(op,10,0);
+				}
 			}
 			
 			else if(sdat[op-1][3] == "E"){
+				if(flag == 0)
+					write(op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(op,0,0);
+						sroom[snum].state = 2;
+						Undergraduate[i].sr.state = 2;
+					}
+					else
+						write(op,10,0);
 			
+				}
 			}
-			
 			else if(sdat[op-1][3] == "C"){
+				if(flag == 0)
+					write(op,10,0);
+				else{
+					if(sroom[snum].state == 2){
+						write(op,0,0);
+						sroom[snum].state = 1;
+						Undergraduate[i].sr.state = 1;
+					}
+					else
+						write(op,10,0);
 			
+				}
 			}
-			write(op,3,0);
+			flag =0;
 		}
 	}
 }
