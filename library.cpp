@@ -459,11 +459,14 @@ void library :: studyroomprocess(int top,int op){
 							write(top,op,0,0);
 							sroom[snum].day = sdattime[op-1][0];
 							sroom[snum].start = sdattime[op-1][1];
-							sroom[snum].during = time;
+							if(sdattime[op-1][1]+ time >18)
+								sroom[snum].during = 18 -sdattime[op-1][1];
+							else
+								sroom[snum].during = time;
 							sroom[snum].state = 1;
 							Undergraduate[i].sr= sroom[snum];
 						}
-						else
+						else				
 							write(top,op,14,sroom[snum].during+sroom[snum].start);
 					}	
 				}	
@@ -480,7 +483,10 @@ void library :: studyroomprocess(int top,int op){
 						write(top,op,0,0);
 						sroom[snum].day = sdattime[op-1][0];
 						sroom[snum].start = sdattime[op-1][1];
-						sroom[snum].during = time;
+						if(sdattime[op-1][1]+ time >18)
+							sroom[snum].during = 18 -sdattime[op-1][1];
+						else
+							sroom[snum].during = time;
 						sroom[snum].state =1;
 						Undergraduate[n[3]].sr= sroom[snum];
 					}
@@ -592,7 +598,7 @@ void library :: seatprocess(int top,int op){
 									}
 									else if(j==49){
 										for(k=0;k<50;k++){
-											if(k=0)
+											if(k==0)
 												temp = seat1[k].start+seat1[k].during;
 											else{
 												if(temp > seat1[k].start +seat1[k].during)
@@ -618,7 +624,7 @@ void library :: seatprocess(int top,int op){
 									}
 									else if(j==49){
 										for(k=0;k<50;k++){
-											if(k=0)
+											if(k==0)
 												temp = seat2[k].start+seat2[k].during;
 											else{
 												if(temp > seat2[k].start +seat2[k].during)
@@ -645,7 +651,7 @@ void library :: seatprocess(int top,int op){
 									}
 									else if(j==49){
 										for(k=0;k<50;k++){
-											if(k=0)
+											if(k==0)
 												temp = seat3[k].start+seat3[k].during;
 											else{
 												if(temp > seat3[k].start +seat3[k].during)
@@ -687,7 +693,7 @@ void library :: seatprocess(int top,int op){
 								}
 								else if(j==49){
 									for(k=0;k<50;k++){
-										if(k=0)
+										if(k==0)
 											temp = seat1[k].start+seat1[k].during;
 										else{
 											if(temp > seat1[k].start +seat1[k].during)
@@ -713,7 +719,7 @@ void library :: seatprocess(int top,int op){
 								}
 								else if(j==49){
 									for(k=0;k<50;k++){
-										if(k=0)
+										if(k==0)
 											temp = seat2[k].start+seat2[k].during;
 										else{
 											if(temp > seat2[k].start +seat2[k].during)
@@ -739,7 +745,7 @@ void library :: seatprocess(int top,int op){
 								}
 								else if(j==49){
 									for(k=0;k<50;k++){
-										if(k=0)
+										if(k==0)
 											temp = seat3[k].start+seat3[k].during;
 										else{
 											if(temp > seat3[k].start +seat3[k].during)
@@ -865,32 +871,42 @@ void library :: process(){
 	int sop=1;
 	int iop=1;
 	int top=1;
-	/*for(iop =1; iop<4 ; iop++){
-		bookprocess(iop);
-	}
-	for(sop =1; sop<5; sop++){
-			if(sdat[sop-1][1] == "StudyRoom")
-				studyroomprocess(sop);
-			else
-				seatprocess(sop);
-	}*/
+	int a=1;
+	int b=1;
 	while((iop<=idatnum)||(sop<=sdatnum)){
-		if((sdattime[sop-1][0] >= idattime[iop-1])&&(iop<=idatnum)){
-			bookprocess(top,iop);
-			iop++;
+		if(sdattime[sop-1][0] >= idattime[iop-1]){
+			if(iop <= idatnum){
+				bookprocess(top,iop);
+				iop++;
+			}
+			else{
+				if(sdat[sop-1][1] == "StudyRoom"){
+					studyroomprocess(top,sop);
+					sop++;
+				}
+				else if(sdat[sop-1][1] == "Seat"){
+					seatprocess(top,sop);
+					sop++;
+				}
+			}
 		}
 		else{
-			if(sdat[sop-1][1] == "StudyRoom")
-				studyroomprocess(top,sop);
-			else{
-				seatprocess(top,sop);
+			if(sop <= sdatnum){
+				if(sdat[sop-1][1] == "StudyRoom"){
+					studyroomprocess(top,sop);
+					sop++;
+				}
+				else if(sdat[sop-1][1] == "Seat"){
+					seatprocess(top,sop);
+					sop++;
+				}
 			}
-			sop++;
+			else{
+				bookprocess(top,iop);
+				iop++;
+			}
 		}
-		top++;
+		top++;	
 	}
-	/*for(op = 1;op<idatnum+1;op++)
-		bookprocess(op);
-	*/
 	out.close();
 }

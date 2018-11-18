@@ -3,7 +3,7 @@
 #include <fstream>
 class library{
 	public: 
-		book Book[30];
+		book Book[200];
 		magazine Magazine[30];
 	       	e_book Ebook[30];
 		undergraduate Undergraduate[200];
