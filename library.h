@@ -29,6 +29,8 @@ class library{
 		void roomclear(int type,int op);
 		void studyroomprocess(int top,int op);
 		void seatprocess(int top,int op);
+		void resourceprocess(int top,int op);
+		void spaceprocess(int top,int op);
 		void process();
 };
 

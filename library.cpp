@@ -151,6 +151,9 @@ void library :: write(int top,int op, int rc,  int time){
 		case 14:
 			out << "14	There is no remain space. This space is available after " ;
 			break;	
+		case 16:	
+			out << "-1	";
+			break;	
 		default:
 			break;
 	}
@@ -184,6 +187,28 @@ void library :: write(int top,int op, int rc,  int time){
 		out << "." << endl;
 		
 	}
+	if(rc == 16){
+		switch(time){
+			case 1:
+				out << "Date out of range" <<endl;;
+				break;
+			case 2:
+				out << "Non-exist space type" << endl;
+				break;	
+			case 3:
+				out << "Non-exist operation" << endl;
+				break;	
+			case 4:
+				out << "Non-exist member type" << endl;
+				break;	
+			case 5:
+				out << "Member name with numbers" << endl;
+				break;	
+			case 6:
+				out << "Negative time" << endl;
+				break;	
+		}
+	}
 }
 
 void library :: bookprocess(int top,int op){
@@ -191,6 +216,19 @@ void library :: bookprocess(int top,int op){
 	int flag =0;
 	int flag2 =0 ;	
 	int flag3 = 0;
+	try{
+		cout << idattime[op-1] << endl;
+		if(idattime[op-1] < 3631)
+			throw 1;
+		if((idat[op-1][3] != "R") && (idat[op-1][3] != "B"))
+			throw 3;
+		if(idat[op-1][4] != "Undergraduate")
+			throw 4;
+		for(i = 0; i< idat[op-1][5].length();i++){
+
+			if(isdigit(idat[op-1][5].at(i)) != 0)
+			       throw 5;
+		}	
 		for(i = 0; i< n[0]; i++){
 			if(Book[i].name == idat[op-1][2]){
 				flag = 1;
@@ -340,6 +378,29 @@ void library :: bookprocess(int top,int op){
 			write(top,op,1,0);
 		}	
 		flag = 0;
+	} catch(int expn){
+		switch(expn){
+			case 1:
+				write(top,op,16,1);
+				break;
+			case 2:
+				write(top,op,16,2);
+				break;
+			case 3:
+				write(top,op,16,3);
+				break;
+			case 4:
+				write(top,op,16,4);
+				break;
+			case 5:
+				write(top,op,16,5);
+				break;
+			case 6:
+				write(top,op,16,6);
+				break;
+		}	
+
+	}
 }
 void library :: roomclear(int type,int op){
 	int i;
@@ -541,6 +602,7 @@ void library :: studyroomprocess(int top,int op){
 			flag =0;
 		}
 	}
+
 }
 
 void library :: seatprocess(int top,int op){
@@ -859,8 +921,60 @@ void library :: seatprocess(int top,int op){
 			flag =0;
 		}
 	}
-}
 
+}
+void library :: resourceprocess(int top, int op){
+}
+void library :: spaceprocess(int top, int op){
+try{
+	int i;
+	if(sdattime[op-1][0] < 3631)
+		throw 1;
+	if((sdat[op-1][1] != "Seat") && (sdat[op-1][1] != "StudyRoom"))
+		throw 2;
+	if((sdat[op-1][3] != "R") && (sdat[op-1][3] != "B") && (sdat[op-1][3] != "E") && (sdat[op-1][3] != "C"))
+		throw 3;
+	if((sdat[op-1][4] != "Undergraduate") && (sdat[op-1][4] != "Graduate") && (sdat[op-1][4] != "Faculty"))
+		throw 4;
+	for(i = 0; i< sdat[op-1][5].length();i++){
+
+		if(isdigit(sdat[op-1][5].at(i)) != 0)
+			      throw 5;
+	}
+	if(sdat[op-1][3] == "B"){
+		if(atoi(sdat[op-1][7].c_str()) <0)
+			throw 6;
+	}
+	if(sdat[op-1][1] == "StudyRoom")
+		studyroomprocess(top,op);
+		
+	else if(sdat[op-1][1] == "Seat")
+		seatprocess(top,op);
+}catch(int expn){
+		switch(expn){
+			case 1:
+				write(top,op,16,1);
+				break;
+			case 2:
+				write(top,op,16,2);
+				break;
+			case 3:
+				write(top,op,16,3);
+				break;
+			case 4:
+				write(top,op,16,4);
+				break;
+			case 5:
+				write(top,op,16,5);
+				break;
+			case 6:
+				write(top,op,16,6);
+				break;
+		}	
+
+	}		
+		
+}
 void library :: process(){
 	set();
 	setidat();
@@ -871,8 +985,7 @@ void library :: process(){
 	int sop=1;
 	int iop=1;
 	int top=1;
-	int a=1;
-	int b=1;
+	int i =0;
 	while((iop<=idatnum)||(sop<=sdatnum)){
 		if(sdattime[sop-1][0] >= idattime[iop-1]){
 			if(iop <= idatnum){
@@ -880,26 +993,14 @@ void library :: process(){
 				iop++;
 			}
 			else{
-				if(sdat[sop-1][1] == "StudyRoom"){
-					studyroomprocess(top,sop);
-					sop++;
-				}
-				else if(sdat[sop-1][1] == "Seat"){
-					seatprocess(top,sop);
-					sop++;
-				}
+				spaceprocess(top,sop);
+				sop++;
 			}
 		}
 		else{
 			if(sop <= sdatnum){
-				if(sdat[sop-1][1] == "StudyRoom"){
-					studyroomprocess(top,sop);
-					sop++;
-				}
-				else if(sdat[sop-1][1] == "Seat"){
-					seatprocess(top,sop);
-					sop++;
-				}
+				spaceprocess(top,sop);
+				sop++;
 			}
 			else{
 				bookprocess(top,iop);
@@ -908,5 +1009,6 @@ void library :: process(){
 		}
 		top++;	
 	}
+
 	out.close();
 }
