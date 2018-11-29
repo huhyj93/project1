@@ -6,6 +6,7 @@ class resource{
 		int state;
 		string type;
 		int date;
+		void clear();
 };
 
 class book: public resource{

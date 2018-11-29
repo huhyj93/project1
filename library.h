@@ -1,5 +1,6 @@
 #include <string>
 #include "member.h"
+#include <fstream>
 class library{
 	public: 
 		book Book[30];
@@ -8,8 +9,16 @@ class library{
 		undergraduate Undergraduate[30];
 		graduate Graduate[30];
 		faculty Faculty[30];
+		string idat[200][6];
+		int idatnum;
+		int idattime[200];
 		int n[6];
+		ofstream out;
 		void set();
+		void setidat();
+		void write(int top,int op, int rc, int time);
+		void bookprocess(int top,int op);
+		void resourceprocess(int top,int op);
 		void process();
 };
 
