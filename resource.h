@@ -12,8 +12,4 @@ class resource{
 class book: public resource{
 };
 
-class magazine: public resource{
-};
 
-class e_book: public resource{
-};

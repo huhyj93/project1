@@ -4,11 +4,7 @@
 class library{
 	public: 
 		book Book[200];
-		magazine Magazine[30];
-	       	e_book Ebook[30];
 		undergraduate Undergraduate[200];
-		graduate Graduate[30];
-		faculty Faculty[30];
 		studyroom sroom[10];
 		seat seat1[50];
 		seat seat2[50];

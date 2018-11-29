@@ -216,9 +216,7 @@ void library :: bookprocess(int top,int op){
 	int flag =0;
 	int flag2 =0 ;	
 	int flag3 = 0;
-	try{
-		cout << idattime[op-1] << endl;
-		if(idattime[op-1] < 3631)
+		/*if(idattime[op-1] < 3631)
 			throw 1;
 		if((idat[op-1][3] != "R") && (idat[op-1][3] != "B"))
 			throw 3;
@@ -228,7 +226,7 @@ void library :: bookprocess(int top,int op){
 
 			if(isdigit(idat[op-1][5].at(i)) != 0)
 			       throw 5;
-		}	
+		}	*/
 		for(i = 0; i< n[0]; i++){
 			if(Book[i].name == idat[op-1][2]){
 				flag = 1;
@@ -378,29 +376,7 @@ void library :: bookprocess(int top,int op){
 			write(top,op,1,0);
 		}	
 		flag = 0;
-	} catch(int expn){
-		switch(expn){
-			case 1:
-				write(top,op,16,1);
-				break;
-			case 2:
-				write(top,op,16,2);
-				break;
-			case 3:
-				write(top,op,16,3);
-				break;
-			case 4:
-				write(top,op,16,4);
-				break;
-			case 5:
-				write(top,op,16,5);
-				break;
-			case 6:
-				write(top,op,16,6);
-				break;
-		}	
 
-	}
 }
 void library :: roomclear(int type,int op){
 	int i;
@@ -924,6 +900,7 @@ void library :: seatprocess(int top,int op){
 
 }
 void library :: resourceprocess(int top, int op){
+	
 }
 void library :: spaceprocess(int top, int op){
 try{
@@ -986,7 +963,7 @@ void library :: process(){
 	int iop=1;
 	int top=1;
 	int i =0;
-	while((iop<=idatnum)||(sop<=sdatnum)){
+/*	while((iop<=idatnum)||(sop<=sdatnum)){
 		if(sdattime[sop-1][0] >= idattime[iop-1]){
 			if(iop <= idatnum){
 				bookprocess(top,iop);
@@ -1007,6 +984,11 @@ void library :: process(){
 				iop++;
 			}
 		}
+		top++;	
+	}*/
+	while(iop<=idatnum){
+		bookprocess(top,iop);
+		iop++;
 		top++;	
 	}
 

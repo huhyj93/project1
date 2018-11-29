@@ -20,10 +20,4 @@ class undergraduate : public member{
 		void clear();
 };
 
-class graduate: public member{
-};
-
-
-class faculty: public member{
-};
 
