@@ -6,6 +6,5 @@
 
 int main(){
 	library Library;
-	Library.set();
 	Library.process();
 }
