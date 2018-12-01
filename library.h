@@ -21,6 +21,11 @@ class library{
 		void graduate_bookprocess(int top,int op);
 		void faculty_bookprocess(int top,int op);
 		void bookprocess(int top,int op);
+		int magazinetest(string name,int time);
+		void undergraduate_magazineprocess(int top,int op);
+		void graduate_magazineprocess(int top,int op);
+		void faculty_magazineprocess(int top,int op);
+		void magazineprocess(int top,int op);
 		void ebookclear(int op,int state);
 		void undergraduate_ebookprocess(int top,int op);
 		void graduate_ebookprocess(int top,int op);

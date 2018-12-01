@@ -1264,7 +1264,228 @@ void library :: faculty_ebookprocess(int top,int op){
 		flag = 0;
 
 }
+int library :: magazinetest(string name,int time){
+	int i,j;	
+	for(i=0;i<n[3];i++){
+		for(j=0;j< Undergraduate[i].mznum;i++){
+			if((Undergraduate[i].rent1[j].name == name)&&(Undergraduate[i].rent1[j].cap == time))
+				return 1;		
+		}	
+	}
 
+	for(i=0;i<n[4];i++){
+		for(j=0;j< Graduate[i].mznum;i++){
+			if((Graduate[i].rent1[j].name == name)&&(Graduate[i].rent1[j].cap == time))
+				return 2;		
+		}	
+	}
+
+	for(i=0;i<n[5];i++){
+		for(j=0;j< Faculty[i].mznum;i++){
+			if((Faculty[i].rent1[j].name == name)&&(Faculty[i].rent1[j].cap == time))
+				return 3;		
+		}	
+	}
+	return 0;
+}
+void library :: undergraduate_magazineprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		for(i=0;i<idat[op-1][2].length();i++){
+			if(idat[op-1][2].at(i) == '[')
+				j= i;
+			else if(idat[op-1][2].at(i) == ']')
+				k = i;		
+			else if(idat[op-1][2].at(i) == '/')
+				l = i;	
+			}
+		int date = 360*atoi(idat[op-1][2].substr(j+1,l-j-1).c_str()) + 30*atoi(idat[op-1][2].substr(l+1,k-l-1).c_str());
+		idat[op-1][2] = idat[op-1][2].substr(0,j);
+		for(i = 0; i< n[1]; i++){
+			if((Magazine[i].name == idat[op-1][2]) &&(idattime[op-1] - date < 360)){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[3] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[3];j++){
+							//member check
+							if(Undergraduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								if(Undergraduate[j].state != 1)
+									write(top,op,3,0);
+								
+								//borrow
+								else{
+									
+									//match Magazine
+									if((Undergraduate[j].books == idat[op-1][2]) &&(Undergraduate[j].mznum == 1)&&(Undergraduate[j].rent1[0].cap == date)){
+										//need late or not
+										//sucess return
+										if( (idattime[op-1] - Undergraduate[j].rent1[0].date) <14){
+											write(top,op,0,0);
+											Undergraduate[j].state = 0;
+										}
+										//late return
+										else{
+											Undergraduate[j].state = 2;
+											Undergraduate[j].late = idattime[op-1] - Undergraduate[j].rent1[0].date -13;
+											Undergraduate[j].date = idattime[op-1] + Undergraduate[j].late;
+											write(top,op,7,idattime[op-1] + Undergraduate[j].late);
+										}
+										Undergraduate[j].mznum--;
+										Undergraduate[j].rent1[0].allclear();
+									}
+									//didn't match borrow Magazine	
+									else
+										write(top,op,3,0);
+													
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[3] == 0){
+						Undergraduate[n[3]].clear();
+						Undergraduate[n[3]].name = idat[op-1][5];
+						//if Magazine is not here
+						if(magazinetest(idat[op-1][2],date) == 1){
+							write(top,op,5,Magazine[i].date + 13);
+						}
+						else if(magazinetest(idat[op-1][2],date) == 2){
+							write(top,op,5,Magazine[i].date + 29);
+						}
+						else if(magazinetest(idat[op-1][2],date) == 3){
+							write(top,op,5,Magazine[i].date + 29);	
+						}
+						// if Magazine is here
+						else{
+							Undergraduate[n[3]].books = idat[op-1][2];
+							Magazine[i].state = 1;
+							Undergraduate[n[3]].state =1;
+							Magazine[i].date = idattime[op-1];
+							Undergraduate[n[3]].rent1[Undergraduate[n[3]].mznum] = Magazine[i];
+							Undergraduate[n[3]].rent1[Undergraduate[n[3]].mznum].cap = date;
+							Undergraduate[n[3]].mznum++;
+							write(top,op,0,0);
+						}
+						n[3]++;	
+					}
+					//have member info
+					else{
+
+						for(j=0;j<n[3];j++){
+							//check name
+							if(Undergraduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Undergraduate[j].state == 2) && (idattime[op-1] > Undergraduate[j].date))
+									Undergraduate[j].state = 0;
+								//one more borrow
+								if((Undergraduate[j].state == 1)&&(Undergraduate[j].booknum + Undergraduate[j].mznum >0)){
+									write(top,op,2,1);
+									break;
+								}
+								//check already borrow
+								for(k=0;k<(Undergraduate[j].mznum); k++){
+									if((Magazine[i].name == Undergraduate[j].rent1[k].name)&&(Undergraduate[j].rent[k].cap == date)){
+										flag3=1;
+										write(top,op,4, Undergraduate[j].rent1[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+									//check Magazine have
+									if(magazinetest(idat[op-1][2],date) == 1){
+										write(top,op,5,Magazine[i].date + 13);
+									}
+									else if(magazinetest(idat[op-1][2],date) == 2){
+										write(top,op,5,Magazine[i].date + 29);
+									}
+									else if(magazinetest(idat[op-1][2],date) == 3){
+										write(top,op,5,Magazine[i].date + 29);	
+									}
+									else{
+										//check restrict member
+										if( Undergraduate[j].state == 2 )
+											write(top,op,6,Undergraduate[j].date);
+									
+										//success borrow
+										else{
+											Undergraduate[j].books = idat[op-1][2];
+											Magazine[i].state = 1;
+											Magazine[i].type = "Undergraduate";
+											Undergraduate[j].state =1;
+											Magazine[i].date = idattime[op-1];
+											Undergraduate[j].rent1[Undergraduate[j].mznum] = Magazine[i];
+											Undergraduate[j].rent1[Undergraduate[j].mznum].cap = date;			
+											Undergraduate[j].mznum++;
+											write(top,op,0,0);
+										}
+									}
+							}
+
+						}
+						if(flag2 ==0){
+							
+							Undergraduate[n[3]].clear();
+							Undergraduate[n[3]].name = idat[op-1][5];
+							if(magazinetest(idat[op-1][2],date) == 1){
+								write(top,op,5,Magazine[i].date + 13);
+							}
+							else if(magazinetest(idat[op-1][2],date) == 2){
+								write(top,op,5,Magazine[i].date + 29);
+							}
+							else if(magazinetest(idat[op-1][2],date) == 3){
+								write(top,op,5,Magazine[i].date + 29);	
+							}
+							else{
+								Undergraduate[n[3]].books = idat[op][2];
+								Magazine[i].state = 1;
+								Magazine[i].type = "Undergraduate";	
+								Undergraduate[n[3]].state =1;
+								Magazine[i].date = idattime[op-1];
+								Undergraduate[n[3]].rent1[Undergraduate[n[3]].mznum] = Magazine[i];
+								Undergraduate[n[3]].rent1[Undergraduate[n[3]].mznum].cap = date;
+								Undergraduate[n[3]].mznum++;
+								write(top,op,0,0);
+							}
+							n[3]++;	
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+
+}
+
+void library :: graduate_magazineprocess(int top,int op){
+}
+void library :: faculty_magazineprocess(int top,int op){
+}
 void library :: bookprocess(int top,int op){
 	if(idat[op-1][4] == "Undergraduate")
 		undergraduate_bookprocess(top,op);
@@ -1273,7 +1494,14 @@ void library :: bookprocess(int top,int op){
 	else if(idat[op-1][4] == "Faculty")
 		faculty_bookprocess(top,op);
 }
-
+void library :: magazineprocess(int top,int op){
+	if(idat[op-1][4] == "Undergraduate")
+		undergraduate_magazineprocess(top,op);
+	/*else if(idat[op-1][4] == "Graduate")
+		graduate_magazineprocess(top,op);
+	else if(idat[op-1][4] == "Faculty")
+		faculty_magazineprocess(top,op);*/
+}
 void library :: ebookprocess(int top,int op){
 	if(idat[op-1][4] == "Undergraduate")
 		undergraduate_ebookprocess(top,op);
@@ -1287,8 +1515,8 @@ void library :: resourceprocess(int top,int op){
 		bookprocess(top,op);
 	else if(idat[op-1][1] == "E-book")
 		ebookprocess(top,op);
-	/*else if(idat[op-1][1] == "Faculty")
-		faculty_ebookprocess(top,op);*/
+	else if(idat[op-1][1] == "Magazine")
+		magazineprocess(top,op);
 }
 void library :: process(){
 	set();
