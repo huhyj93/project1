@@ -15,6 +15,8 @@ class member{
 		book rent[10];
 		magazine rent1[10];
 		e_book rent2[50];
+		studyroom sr;
+		seat st;
 		void clear();
 };
 
