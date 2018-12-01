@@ -17,7 +17,15 @@ class library{
 		void set();
 		void setidat();
 		void write(int top,int op, int rc, int time);
+		void undergraduate_bookprocess(int top,int op);
+		void graduate_bookprocess(int top,int op);
+		void faculty_bookprocess(int top,int op);
 		void bookprocess(int top,int op);
+		void ebookclear(int op,int state);
+		void undergraduate_ebookprocess(int top,int op);
+		void graduate_ebookprocess(int top,int op);
+		void faculty_ebookprocess(int top,int op);
+		void ebookprocess(int top,int op);
 		void resourceprocess(int top,int op);
 		void process();
 };

@@ -6,8 +6,11 @@
 using namespace std;
 
 void library ::set(){
-	n[0] = 0;
+	int i,j,k;
+	for(i=0;i<6;i++)
+		n[i] = 0;
 	string dump;
+	string temp;
 	ifstream fin;
         fin.open("resource.dat");
 	fin >> dump;
@@ -20,6 +23,29 @@ void library ::set(){
 			Book[n[0]].name = dump;
 			Book[n[0]].state = 0;
 			n[0]++;
+		}
+		else if(dump == "Magazine"){
+			Magazine[n[1]].type = dump;
+			fin >> dump;
+			Magazine[n[1]].name = dump;
+			Magazine[n[1]].state = 0;
+			n[1]++;
+		}
+		else if(dump == "E-book"){
+			Ebook[n[2]].type = dump;
+			fin >> dump;
+			Ebook[n[2]].name = dump;
+			Ebook[n[2]].state = 0;
+			for(i=0;i<dump.length();i++){
+				if(dump.at(i) == '[')
+					j= i;
+				else if(dump.at(i) == ']')
+					k = i;		
+			}
+			temp = dump.substr(j+1,k-j-1);
+			Ebook[n[2]].cap = atoi(temp.c_str());			
+			Ebook[n[2]].name = dump.substr(0,j);
+			n[2]++;
 		}
 	}
 	fin.close();
@@ -67,7 +93,7 @@ void library :: write(int top,int op, int rc,  int time){
 			out << "1	Non exist resource." << endl;
 			break;	
 		case 2:
-			out << "2	Exceeds your possible number of borrow. Possible# of borrows: 1" << endl;
+			out << "2	Exceeds your possible number of borrow. Possible# of borrows: " << time << endl;
 			break;
 		case 3:
 			out << "3	You did not borrow this book." << endl;
@@ -104,6 +130,9 @@ void library :: write(int top,int op, int rc,  int time){
 			break;
 		case 14:
 			out << "14	There is no remain space. This space is available after " ;
+			break;	
+		case 15:
+			out << "15	Exceeds your storage capacity" <<endl; ;
 			break;	
 		case 16:	
 			out << "-1	";
@@ -164,7 +193,7 @@ void library :: write(int top,int op, int rc,  int time){
 		}
 	}
 }
-void library :: bookprocess(int top,int op){
+void library :: undergraduate_bookprocess(int top,int op){
 	int i,j,k;
 	int flag =0;
 	int flag2 =0 ;	
@@ -239,16 +268,22 @@ void library :: bookprocess(int top,int op){
 						Undergraduate[n[3]].clear();
 						Undergraduate[n[3]].name = idat[op-1][5];
 						//if book is not here
-						if( Book[i].state == 1)
-							write(top,op,5,Book[i].date + 13);
-						
+						if( Book[i].state == 1){
+							if(Book[i].type == "Undergraduate")
+								write(top,op,5,Book[i].date + 13);
+							else if(Book[i].type == "Graduate")
+								write(top,op,5,Book[i].date + 29);
+							else if(Book[i].type == "Faculty")
+								write(top,op,5,Book[i].date + 29);
+						}
 						// if book is here
 						else{
 							Undergraduate[n[3]].books = idat[op-1][2];
 							Book[i].state = 1;
+							Book[i].type = "Undergraduate";
 							Undergraduate[n[3]].state =1;
 							Book[i].date = idattime[op-1];
-							Undergraduate[n[3]].rent[Undergraduate->booknum] = Book[i];
+							Undergraduate[n[3]].rent[Undergraduate[n[3]].booknum] = Book[i];
 							Undergraduate[n[3]].booknum++;
 							write(top,op,0,0);
 						}
@@ -265,15 +300,15 @@ void library :: bookprocess(int top,int op){
 								if( (Undergraduate[j].state == 2) && (idattime[op-1] > Undergraduate[j].date))
 									Undergraduate[j].state = 0;
 								//one more borrow
-								if(Undergraduate[j].state == 1){
-									write(top,op,2,0);
+								if((Undergraduate[j].state == 1)&&(Undergraduate[j].booknum + Undergraduate[j].mznum >0)){
+									write(top,op,2,1);
 									break;
 								}
 								//check already borrow
-								for(k=0;k<(Undergraduate->booknum); k++){
-									if( Book[i].name == Undergraduate->rent[k].name){
+								for(k=0;k<(Undergraduate[j].booknum); k++){
+									if( Book[i].name == Undergraduate[j].rent[k].name){
 										flag3=1;
-										write(top,op,4, Undergraduate ->rent[k].date);		
+										write(top,op,4, Undergraduate[j].rent[k].date);		
 									}
 								}
 								if(flag3 ==1){
@@ -282,21 +317,27 @@ void library :: bookprocess(int top,int op){
 								}
 									//check book have
 									if( Book[i].state == 1){
-										write(top,op,5,Book[i].date + 13);
+										if(Book[i].type == "Undergraduate")
+											write(top,op,5,Book[i].date + 13);
+										else if(Book[i].type == "Graduate")
+											write(top,op,5,Book[i].date + 29);
+										else if(Book[i].type == "Faculty")
+											write(top,op,5,Book[i].date + 29);
 										break;
 									}
 
 									//check restrict member
-									if( Undergraduate[j].state ==2 )
+									if( Undergraduate[j].state == 2 )
 										write(top,op,6,Undergraduate[j].date);
 									
 									//success borrow
 									else{
 										Undergraduate[j].books = idat[op-1][2];
 										Book[i].state = 1;
+										Book[i].type = "Undergraduate";
 										Undergraduate[j].state =1;
 										Book[i].date = idattime[op-1];
-										Undergraduate[j].rent[Undergraduate->booknum] = Book[i];
+										Undergraduate[j].rent[Undergraduate[j].booknum] = Book[i];
 										Undergraduate[j].booknum++;
 										write(top,op,0,0);
 									}
@@ -307,14 +348,21 @@ void library :: bookprocess(int top,int op){
 							
 							Undergraduate[n[3]].clear();
 							Undergraduate[n[3]].name = idat[op-1][5];
-							if( Book[i].state == 1)
-								write(top,op,5,Book[i].date + 13);
+							if( Book[i].state == 1){
+								if(Book[i].type == "Undergraduate")
+									write(top,op,5,Book[i].date + 13);
+								else if(Book[i].type == "Graduate")
+									write(top,op,5,Book[i].date + 29);
+								else if(Book[i].type == "Faculty")
+									write(top,op,5,Book[i].date + 29);
+							}
 							else{
 								Undergraduate[n[3]].books = idat[op][2];
 								Book[i].state = 1;
+								Book[i].type = "Undergraduate";	
 								Undergraduate[n[3]].state =1;
 								Book[i].date = idattime[op-1];
-								Undergraduate[n[3]].rent[Undergraduate->booknum] = Book[i];
+								Undergraduate[n[3]].rent[Undergraduate[n[3]].booknum] = Book[i];
 								Undergraduate[n[3]].booknum++;
 								write(top,op,0,0);
 							}
@@ -331,18 +379,928 @@ void library :: bookprocess(int top,int op){
 		flag = 0;
 
 }
+
+void library :: graduate_bookprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		for(i = 0; i< n[0]; i++){
+			if(Book[i].name == idat[op-1][2]){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[4] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[4];j++){
+							//member check
+							if(Graduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								
+								if((Graduate[j].state != 1) && (Graduate[j].booknum == 0))
+									write(top,op,3,0);
+								//borrow
+								else{
+									for(k=0;k<Graduate[j].booknum;k++){
+										if(Graduate[j].rent[k].name == idat[op-1][2]){
+											flag3 =1;
+											break;
+										}
+									}
+									//match book
+									if(flag3 == 1){
+										//need late or not
+										//sucess return
+										if( (idattime[op-1] - Book[i].date) <30){
+											write(top,op,0,0);
+											for(l=k;l<Graduate[j].booknum-1;l++)
+												Graduate[j].rent[l] = Graduate[j].rent[l+1];
+											Graduate[j].booknum--;
+											Book[i].clear();
+											if(Graduate[j].booknum == 0)		
+												Graduate[j].state = 0;
+											
+										}
+										//late return
+										else{
+											Graduate[j].state = 2;
+											Graduate[j].late = idattime[op-1] - Book[i].date -29;
+											Graduate[j].date = idattime[op-1] + Graduate[j].late;
+											write(top,op,7,idattime[op-1] + Graduate[j].late);
+											for(l=k;l<Graduate[j].booknum-1;l++)
+												Graduate[j].rent[l] = Graduate[j].rent[l+1];
+											Graduate[j].booknum--;
+											Book[i].clear();
+										}
+									}
+									//didn't match borrow book	
+									else
+										write(top,op,3,0);
+									flag3 = 0;				
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[4] == 0){
+						Graduate[n[4]].clear();
+						Graduate[n[4]].name = idat[op-1][5];
+						//if book is not here
+						if( Book[i].state == 1){
+							if(Book[i].type == "Undergraduate")
+								write(top,op,5,Book[i].date + 13);
+							else if(Book[i].type == "Graduate")
+								write(top,op,5,Book[i].date + 29);
+							else if(Book[i].type == "Faculty")
+								write(top,op,5,Book[i].date + 29);
+						}
+						// if book is here
+						else{
+							Graduate[n[4]].books = idat[op-1][2];
+							Book[i].state = 1;
+							Book[i].type = "Graduate";
+							Graduate[n[4]].state =1;
+							Book[i].date = idattime[op-1];
+							Graduate[n[4]].rent[Graduate[n[4]].booknum] = Book[i];
+							Graduate[n[4]].booknum++;
+							write(top,op,0,0);
+						}
+						n[4]++;	
+					}
+					//have member info
+					else{
+
+						for(j=0;j<n[4];j++){
+							//check name
+							if(Graduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Graduate[j].state == 2) && (idattime[op-1] > Graduate[j].date)){
+									if(Graduate[j].booknum == 0)	
+										Graduate[j].state = 0;
+									else
+										Graduate[j].state = 1; 										
+								}
+								//one more borrow
+								if((Graduate[j].state == 1) &&(Graduate[j].booknum+Graduate[j].mznum == 5)){
+									write(top,op,2,5);
+									break;
+								}
+								//check already borrow
+								for(k=0;k<(Graduate[j].booknum); k++){
+									if( Book[i].name == Graduate[j].rent[k].name){
+										flag3=1;
+										write(top,op,4, Graduate[j].rent[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+									//check book have
+									if( Book[i].state == 1){
+										if(Book[i].type == "Undergraduate")
+											write(top,op,5,Book[i].date + 13);
+										else if(Book[i].type == "Graduate")
+											write(top,op,5,Book[i].date + 29);
+										else if(Book[i].type == "Faculty")
+											write(top,op,5,Book[i].date + 29);
+										break;
+									}
+
+									//check restrict member
+									if( Graduate[j].state ==2 )
+										write(top,op,6,Graduate[j].date);
+									
+									//success borrow
+									else{
+										Graduate[j].books = idat[op-1][2];
+										Book[i].state = 1;
+										Book[i].type = "Graduate";
+										Graduate[j].state =1;
+										Book[i].date = idattime[op-1];
+										Graduate[j].rent[Graduate[j].booknum] = Book[i];
+										Graduate[j].booknum++;
+										write(top,op,0,0);
+									}
+							}
+
+						}
+						if(flag2 ==0){
+							
+							Graduate[n[4]].clear();
+							Graduate[n[4]].name = idat[op-1][5];
+							if( Book[i].state == 1){
+								if(Book[i].type == "Undergraduate")
+									write(top,op,5,Book[i].date + 13);
+								else if(Book[i].type == "Graduate")
+									write(top,op,5,Book[i].date + 29);
+								else if(Book[i].type == "Faculty")
+									write(top,op,5,Book[i].date + 29);
+							}
+							else{
+								Graduate[n[4]].books = idat[op][2];
+								Book[i].state = 1;
+								Graduate[n[4]].state =1;
+								Book[i].type = "Graduate";
+								Book[i].date = idattime[op-1];
+								Graduate[n[4]].rent[Graduate[n[4]].booknum] = Book[i];
+								Graduate[n[4]].booknum++;
+								write(top,op,0,0);
+							}
+							n[4]++;	
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+}
+
+void library :: faculty_bookprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		for(i = 0; i< n[0]; i++){
+			if(Book[i].name == idat[op-1][2]){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[5] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[5];j++){
+							//member check
+							if(Faculty[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								
+								if((Faculty[j].state != 1) && (Faculty[j].booknum == 0))
+									write(top,op,3,0);
+								//borrow
+								else{
+									for(k=0;k<Faculty[j].booknum;k++){
+										if(Faculty[j].rent[k].name == idat[op-1][2]){
+											flag3 =1;
+											break;
+										}
+									}
+									//match book
+									if(flag3 == 1){
+										//need late or not
+										//sucess return
+										if( (idattime[op-1] - Book[i].date) <30){
+											write(top,op,0,0);
+											for(l=k;l<Faculty[j].booknum-1;l++)
+												Faculty[j].rent[l] = Faculty[j].rent[l+1];
+											Faculty[j].booknum--;
+											Book[i].clear();
+											if(Faculty[j].booknum == 0)		
+												Faculty[j].state = 0;
+											
+										}
+										//late return
+										else{
+											Faculty[j].state = 2;
+											Faculty[j].late = idattime[op-1] - Book[i].date -29;
+											Faculty[j].date = idattime[op-1] + Faculty[j].late;
+											write(top,op,7,idattime[op-1] + Faculty[j].late);
+											for(l=k;l<Faculty[j].booknum-1;l++)
+												Faculty[j].rent[l] = Faculty[j].rent[l+1];
+											Faculty[j].booknum--;
+											Book[i].clear();
+										}
+									}
+									//didn't match borrow book	
+									else
+										write(top,op,3,0);
+									flag3 = 0;				
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[5] == 0){
+						Faculty[n[5]].clear();
+						Faculty[n[5]].name = idat[op-1][5];
+						//if book is not here
+						if( Book[i].state == 1){
+							if(Book[i].type == "Undergraduate")
+								write(top,op,5,Book[i].date + 13);
+							else if(Book[i].type == "Graduate")
+								write(top,op,5,Book[i].date + 29);
+							else if(Book[i].type == "Faculty")
+								write(top,op,5,Book[i].date + 29);
+						}
+						// if book is here
+						else{
+							Faculty[n[5]].books = idat[op-1][2];
+							Book[i].state = 1;
+							Book[i].type = "Faculty";
+							Faculty[n[5]].state =1;
+							Book[i].date = idattime[op-1];
+							Faculty[n[5]].rent[Faculty[n[5]].booknum] = Book[i];
+							Faculty[n[5]].booknum++;
+							write(top,op,0,0);
+						}
+						n[5]++;	
+					}
+					//have member info
+					else{
+
+						for(j=0;j<n[5];j++){
+							//check name
+							if(Faculty[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Faculty[j].state == 2) && (idattime[op-1] > Faculty[j].date)){
+									if(Faculty[j].booknum == 0)	
+										Faculty[j].state = 0;
+									else
+										Faculty[j].state = 1; 										
+								}
+								//one more borrow
+								if((Faculty[j].state == 1) &&(Faculty[j].booknum +Faculty[j].mznum  == 10)){
+									write(top,op,2,10);
+									break;
+								}
+								//check already borrow
+								for(k=0;k<(Faculty[j].booknum); k++){
+									if( Book[i].name == Faculty[j].rent[k].name){
+										flag3=1;
+										write(top,op,4, Faculty[j].rent[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+									//check book have
+									if( Book[i].state == 1){
+										if(Book[i].type == "Undergraduate")
+											write(top,op,5,Book[i].date + 13);
+										else if(Book[i].type == "Graduate")
+											write(top,op,5,Book[i].date + 29);
+										else if(Book[i].type == "Faculty")
+											write(top,op,5,Book[i].date + 29);
+										break;
+									}
+
+									//check restrict member
+									if( Faculty[j].state ==2 )
+										write(top,op,6,Faculty[j].date);
+									
+									//success borrow
+									else{
+										Faculty[j].books = idat[op-1][2];
+										Book[i].state = 1;
+										Book[i].type = "Faculty";
+										Faculty[j].state =1;
+										Book[i].date = idattime[op-1];
+										Faculty[j].rent[Faculty[j].booknum] = Book[i];
+										Faculty[j].booknum++;
+										write(top,op,0,0);
+									}
+							}
+
+						}
+						if(flag2 ==0){
+							
+							Faculty[n[5]].clear();
+							Faculty[n[5]].name = idat[op-1][5];
+							if( Book[i].state == 1){
+								if(Book[i].type == "Undergraduate")
+									write(top,op,5,Book[i].date + 13);
+								else if(Book[i].type == "Graduate")
+									write(top,op,5,Book[i].date + 29);
+								else if(Book[i].type == "Faculty")
+									write(top,op,5,Book[i].date + 29);
+							}
+							else{
+								Faculty[n[5]].books = idat[op-1][2];
+								Book[i].state = 1;
+								Faculty[n[5]].state =1;
+								Book[i].type = "Faculty";
+								Book[i].date = idattime[op-1];
+								Faculty[n[5]].rent[Faculty[n[5]].booknum] = Book[i];
+								Faculty[n[5]].booknum++;
+								write(top,op,0,0);
+							}
+							n[5]++;	
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+
+}
+
+
+void library :: ebookclear(int op,int state){
+	int i,j,k;
+	int temp;
+	if(state == 1){
+	for(i=0;i< n[3]; i++){
+		temp = Undergraduate[i].ebnum;
+		if(temp != 0){
+			j=0;		
+			while(temp >0){
+				if((idattime[op-1] - Undergraduate[i].rent2[j].date) > 13){
+					for(k=j;k<Undergraduate[i].ebnum-1;k++){
+						Undergraduate[i].rent2[k] = Undergraduate[i].rent2[k+1];
+					}
+				}
+				else{
+					j++;
+				}
+				temp--;
+			}
+			Undergraduate[i].ebnum = Undergraduate[i].ebnum-j+1; 
+			//for(k=Undergraduate[i].ebnum; k<50;k++)
+						
+		}
+		
+	}
+	}
+	else if(state ==2){
+	for(i=0;i< n[4]; i++){
+		temp = Graduate[i].ebnum;
+		if(temp != 0){
+			j=0;		
+			while(temp >0){
+				if((idattime[op-1] - Graduate[i].rent2[j].date) > 29){
+					for(k=j;k<Graduate[i].ebnum-1;k++){
+						Graduate[i].rent2[k] = Graduate[i].rent2[k+1];
+					}
+				}
+				else{
+					j++;
+				}
+				temp--;
+			}
+			Graduate[i].ebnum = Graduate[i].ebnum-j+1; 
+		}
+		
+	}
+	}
+	else if(state ==3){
+	for(i=0;i< n[5]; i++){
+		temp = Faculty[i].ebnum;
+		if(temp != 0){
+			j=0;		
+			while(temp >0){
+				if((idattime[op-1] - Faculty[i].rent2[j].date) > 29){
+					for(k=j;k<Faculty[i].ebnum-1;k++){
+						Faculty[i].rent2[k] = Faculty[i].rent2[k+1];
+					}
+				}
+				else{
+					j++;
+				}
+				temp--;
+			}
+			Faculty[i].ebnum =Faculty[i].ebnum-j+1; 
+		}
+		
+	}
+	}
+}
+void library :: undergraduate_ebookprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		ebookclear(op,1);
+		for(i = 0; i< n[2]; i++){
+			if(Ebook[i].name == idat[op-1][2]){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[3] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[3];j++){
+							//member check
+							if(Undergraduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								if(Undergraduate[j].ebnum == 0)
+									write(top,op,3,0);
+								
+								//borrow
+								else{
+									for(k=0;k<Undergraduate[j].ebnum;k++){
+										if(Undergraduate[j].rent2[k].name == idat[op-1][2]){
+											flag3 =1;
+											break;
+										}
+									}					
+									//match book
+									if(flag3==1){
+										//sucess return
+										write(top,op,0,0);
+										for(l=k;l<Undergraduate[j].ebnum-1;l++)
+											Undergraduate[j].rent2[l] = Undergraduate[j].rent2[l+1];
+										
+										Undergraduate[j].cap = Undergraduate[j].cap -Ebook[i].cap;
+										Undergraduate[j].ebnum--;
+										for(l=Undergraduate[j].ebnum; l <50; l++)
+											Undergraduate[j].rent2[l].allclear();			
+		
+									}
+									//didn't match borrow book	
+									else{
+										write(top,op,3,0);
+									}
+									flag3= 0;				
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[3] == 0){
+						Undergraduate[n[3]].clear();
+						Undergraduate[n[3]].name = idat[op-1][5];
+						if( (Undergraduate[n[3]].cap +  Ebook[i].cap) > 100)
+							write(top,op,15,0);
+						else{
+							Undergraduate[n[3]].state =1;
+							Ebook[i].date = idattime[op-1];
+							Undergraduate[n[3]].rent2[Undergraduate[n[3]].ebnum] = Ebook[i];
+							Undergraduate[n[3]].ebnum++;
+							Undergraduate[n[3]].cap = Undergraduate[n[3]].cap + Ebook[i].cap;
+							write(top,op,0,0);
+						}
+						n[3]++;	
+					}
+					//have member info
+					else{
+						for(j=0;j<n[3];j++){
+							//check name
+							if(Undergraduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Undergraduate[j].state == 2) && (idattime[op-1] > Undergraduate[j].date))
+									Undergraduate[j].state = 0;
+								//check already borrow
+								for(k=0;k<(Undergraduate[j].ebnum); k++){
+									if( Ebook[i].name == Undergraduate[j].rent2[k].name){
+										flag3=1;
+										write(top,op,4, Undergraduate[j].rent2[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+								//check restrict member
+								if( Undergraduate[j].state == 2 )
+									write(top,op,6,Undergraduate[j].date);
+								//check capacity
+								else if(( Undergraduate[j].cap +  Ebook[i].cap) > 100)
+									write(top,op,15,0);	
+								//success borrow
+								else{
+									Undergraduate[j].state =1;
+									Ebook[i].date = idattime[op-1];
+									Undergraduate[j].rent2[Undergraduate[n[3]].ebnum] = Ebook[i];
+									Undergraduate[j].ebnum++;
+									Undergraduate[j].cap = Undergraduate[j].cap + Ebook[i].cap;
+									write(top,op,0,0);
+								}
+							}
+
+						}
+						if(flag2 ==0){
+							Undergraduate[n[3]].clear();
+							Undergraduate[n[3]].name = idat[op-1][5];
+							if( (Undergraduate[n[3]].cap +  Ebook[i].cap) > 100)
+								write(top,op,15,0);
+							else{
+								Undergraduate[n[3]].state =1;
+								Ebook[i].date = idattime[op-1];
+								Undergraduate[n[3]].rent2[Undergraduate[n[3]].ebnum] = Ebook[i];
+								Undergraduate[n[3]].ebnum++;
+								Undergraduate[n[3]].cap = Undergraduate[n[3]].cap + Ebook[i].cap;
+								write(top,op,0,0);
+							}
+							n[3]++;		
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+
+}
+void library :: graduate_ebookprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		ebookclear(op,2);
+		for(i = 0; i< n[2]; i++){
+			if(Ebook[i].name == idat[op-1][2]){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[4] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[4];j++){
+							//member check
+							if(Graduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								if(Graduate[j].ebnum == 0)
+									write(top,op,3,0);
+								
+								//borrow
+								else{
+									for(k=0;k<Graduate[j].ebnum;k++){
+										if(Graduate[j].rent2[k].name == idat[op-1][2]){
+											flag3 =1;
+											break;
+										}
+									}					
+									//match book
+									if(flag3==1){
+										//sucess return
+										write(top,op,0,0);
+										for(l=k;l<Graduate[j].ebnum-1;l++)
+											Graduate[j].rent2[l] = Graduate[j].rent2[l+1];
+										Graduate[j].cap = Graduate[j].cap -Ebook[i].cap;
+										Graduate[j].ebnum--;	
+										for(l=Graduate[j].ebnum; l <50; l++)
+											Graduate[j].rent2[l].allclear();		
+									}
+									//didn't match borrow book	
+									else
+										write(top,op,3,0);
+									flag3= 0;				
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[4] == 0){
+						Graduate[n[4]].clear();
+						Graduate[n[4]].name = idat[op-1][5];
+						if( (Graduate[n[4]].cap +  Ebook[i].cap) > 500)
+							write(top,op,15,0);
+						else{
+							Graduate[n[4]].state =1;
+							Ebook[i].date = idattime[op-1];
+							Graduate[n[4]].rent2[Graduate[n[4]].ebnum] = Ebook[i];
+							Graduate[n[4]].ebnum++;
+							Graduate[n[4]].cap = Graduate[n[4]].cap +  Ebook[i].cap;
+							write(top,op,0,0);
+						}
+						n[4]++;	
+					}
+					//have member info
+					else{
+						for(j=0;j<n[4];j++){
+							//check name
+							if(Graduate[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Graduate[j].state == 2) && (idattime[op-1] > Graduate[j].date))
+									Graduate[j].state = 0;
+								//check already borrow
+								for(k=0;k<(Graduate[j].ebnum); k++){
+									if( Ebook[i].name == Graduate[j].rent2[k].name){
+										flag3=1;
+										write(top,op,4, Graduate[j].rent2[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+								//check restrict member
+								if( Graduate[j].state == 2 )
+									write(top,op,6,Graduate[j].date);
+								else if( (Graduate[j].cap +  Ebook[i].cap) > 500)
+									write(top,op,15,0);	
+								//success borrow
+								else{
+									Graduate[j].state =1;
+									Ebook[i].date = idattime[op-1];
+									Graduate[j].rent2[Graduate[n[4]].ebnum] = Ebook[i];
+									Graduate[j].ebnum++;
+									write(top,op,0,0);
+								}
+							}
+
+						}
+						if(flag2 ==0){
+							Graduate[n[4]].clear();
+							Graduate[n[4]].name = idat[op-1][5];
+							if( (Graduate[n[4]].cap +  Ebook[i].cap) > 500)
+								write(top,op,15,0);
+							else{
+								Graduate[n[4]].state =1;
+								Ebook[i].date = idattime[op-1];
+								Graduate[n[4]].rent2[Graduate[n[4]].ebnum] = Ebook[i];
+								Graduate[n[4]].ebnum++;
+								Graduate[n[4]].cap = Graduate[n[4]].cap +  Ebook[i].cap;
+								write(top,op,0,0);
+							}
+							n[4]++;		
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+
+}
+void library :: faculty_ebookprocess(int top,int op){
+	int i,j,k,l;
+	int flag =0;
+	int flag2 =0 ;	
+	int flag3 = 0;
+		ebookclear(op,3);
+		for(i = 0; i< n[2]; i++){
+			if(Ebook[i].name == idat[op-1][2]){
+				flag = 1;
+				//return
+				if(idat[op-1][3] == "R"){
+					//member check
+					if(n[5] == 0)
+						write(top,op,3,0);
+					
+					else
+					{
+						for(j=0;j<n[5];j++){
+							//member check
+							if(Faculty[j].name == idat[op-1][5]){
+								flag2 =1;
+								//not borrow 
+								if(Faculty[j].ebnum == 0)
+									write(top,op,3,0);
+								
+								//borrow
+								else{
+									for(k=0;k<Faculty[j].ebnum;k++){
+										if(Faculty[j].rent2[k].name == idat[op-1][2]){
+											flag3 =1;
+											break;
+										}
+									}					
+									//match book
+									if(flag3==1){
+										//sucess return
+										write(top,op,0,0);
+										for(l=k;l<Faculty[j].ebnum-1;l++)
+											Faculty[j].rent2[l] = Faculty[j].rent2[l+1];
+										Faculty[j].cap = Faculty[j].cap -Ebook[i].cap;
+										Faculty[j].ebnum--;	
+										for(l=Faculty[j].ebnum; l <50; l++)
+											Faculty[j].rent2[l].allclear();		
+									}
+									//didn't match borrow book	
+									else
+										write(top,op,3,0);
+									flag3= 0;				
+								}
+
+							}	
+						}
+					 	//if didn't enter member	
+						if(flag2 == 0){
+							write(top,op,3,0);
+						}
+						flag2=0;
+					}
+				}
+				//borrow	
+				else{
+					//first member check
+					if(n[5] == 0){
+						Faculty[n[5]].clear();
+						Faculty[n[5]].name = idat[op-1][5];
+						if( (Faculty[n[4]].cap +  Ebook[i].cap) > 1000)
+							write(top,op,15,0);
+						else{
+							Faculty[n[5]].state =1;
+							Ebook[i].date = idattime[op-1];
+							Faculty[n[5]].rent2[Faculty[n[5]].ebnum] = Ebook[i];
+							Faculty[n[5]].ebnum++;
+							write(top,op,0,0);
+							Faculty[n[4]].cap +=  Ebook[i].cap;
+							}
+						n[5]++;	
+					}
+					//have member info
+					else{
+						for(j=0;j<n[5];j++){
+							//check name
+							if(Faculty[j].name == idat[op-1][5]){
+								flag2 =1;
+								//restrict member release
+								if( (Faculty[j].state == 2) && (idattime[op-1] > Faculty[j].date))
+									Faculty[j].state = 0;
+								//check already borrow
+								for(k=0;k<(Graduate[j].ebnum); k++){
+									if( Ebook[i].name == Faculty[j].rent2[k].name){
+										flag3=1;
+										write(top,op,4, Faculty[j].rent2[k].date);		
+									}
+								}
+								if(flag3 ==1){
+									flag3 =0;
+									break;
+								}
+								//check restrict member
+								if( Faculty[j].state == 2 )
+									write(top,op,6,Faculty[j].date);
+								else if( (Faculty[j].cap +  Ebook[i].cap) > 1000)
+									write(top,op,15,0);	
+								//success borrow
+								else{
+									Faculty[j].state =1;
+									Ebook[i].date = idattime[op-1];
+									Faculty[j].rent2[Faculty[n[5]].ebnum] = Ebook[i];
+									Faculty[j].ebnum++;
+									Faculty[j].cap +=  Ebook[i].cap;		
+									write(top,op,0,0);
+								}
+							}
+
+						}
+						if(flag2 ==0){
+							Faculty[n[5]].clear();
+							Faculty[n[5]].name = idat[op-1][5];
+							if( (Faculty[n[5]].cap +  Ebook[i].cap) > 1000)
+								write(top,op,15,0);
+							else{
+								Faculty[n[5]].state =1;
+								Ebook[i].date = idattime[op-1];
+								Faculty[n[5]].rent2[Faculty[n[5]].ebnum] = Ebook[i];
+								Faculty[n[5]].ebnum++;
+								Faculty[n[5]].cap +=  Ebook[i].cap;
+								write(top,op,0,0);
+							}
+							n[5]++;		
+						}	
+						flag2=0;
+					}
+				}				
+			}
+		}		
+		if(flag == 0){
+			write(top,op,1,0);
+		}	
+		flag = 0;
+
+}
+
+void library :: bookprocess(int top,int op){
+	if(idat[op-1][4] == "Undergraduate")
+		undergraduate_bookprocess(top,op);
+	else if(idat[op-1][4] == "Graduate")
+		graduate_bookprocess(top,op);
+	else if(idat[op-1][4] == "Faculty")
+		faculty_bookprocess(top,op);
+}
+
+void library :: ebookprocess(int top,int op){
+	if(idat[op-1][4] == "Undergraduate")
+		undergraduate_ebookprocess(top,op);
+	else if(idat[op-1][4] == "Graduate")
+		graduate_ebookprocess(top,op);
+	else if(idat[op-1][4] == "Faculty")
+		faculty_ebookprocess(top,op);
+}
+void library :: resourceprocess(int top,int op){
+	if(idat[op-1][1] == "Book")
+		bookprocess(top,op);
+	else if(idat[op-1][1] == "E-book")
+		ebookprocess(top,op);
+	/*else if(idat[op-1][1] == "Faculty")
+		faculty_ebookprocess(top,op);*/
+}
 void library :: process(){
 	set();
 	setidat();
 	out.open("output.dat");
-	n[3] = 0;
 	out << "Op_#	Return_code	Description" << endl;
 	int sop=1;
 	int iop=1;
 	int top=1;
 	int i =0;
 	while(iop<=idatnum){
-		bookprocess(top,iop);
+		resourceprocess(top,iop);
 		iop++;
 		top++;	
 	}
