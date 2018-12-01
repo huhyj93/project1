@@ -1979,6 +1979,26 @@ void library :: roomclear(int type,int op){
 			else
 				Undergraduate[i].sr.clear();
 		}
+		for(i=0;i<n[4];i++){
+			if(sdattime[op-1][0] == sroom[i].day){
+				if(Graduate[i].sr.state == 1){
+					if( Graduate[i].sr.start +Graduate[i].sr.during < sdattime[op-1][1])
+						Graduate[i].sr.clear();
+				}
+			}
+			else
+				Graduate[i].sr.clear();
+		}
+		for(i=0;i<n[5];i++){
+			if(sdattime[op-1][0] == sroom[i].day){
+				if(Faculty[i].sr.state == 1){
+					if( Faculty[i].sr.start +Faculty[i].sr.during < sdattime[op-1][1])
+						Faculty[i].sr.clear();
+				}
+			}
+			else
+				Faculty[i].sr.clear();
+		}
 	
 	}
 	else{
@@ -2035,9 +2055,35 @@ void library :: roomclear(int type,int op){
 				Undergraduate[i].st.clear();	
 				
 		}	
+		for(i=0;i<n[4];i++){
+			if(sdattime[op-1][0] ==Graduate[i].st.day){
+				if((Graduate[i].st.state ==2) && (sdattime[op-1][1] -  Graduate[i].st.etime >0))
+					Graduate[i].st.clear();
+				else if(Graduate[i].st.state == 1){
+					if( Graduate[i].st.start + Graduate[i].st.during < sdattime[op-1][1])
+						Graduate[i].st.clear();
+				}
+			}
+			else
+				Undergraduate[i].st.clear();	
+				
+		}
+		for(i=0;i<n[5];i++){
+			if(sdattime[op-1][0] == Faculty[i].st.day){
+				if((Faculty[i].st.state ==2) && (sdattime[op-1][1] - Faculty[i].st.etime >0))
+					Faculty[i].st.clear();
+				else if(Faculty[i].st.state == 1){
+					if( Faculty[i].st.start + Faculty[i].st.during < sdattime[op-1][1])
+						Faculty[i].st.clear();
+				}
+			}
+			else
+				Faculty[i].st.clear();	
+				
+		}
 	}
 }
-void library :: studyroomprocess(int top,int op){
+void library :: undergraduate_studyroomprocess(int top,int op){
 	int i,j,k;
 	int flag = 0;
 	int snum,mnum,time;
@@ -2158,8 +2204,249 @@ void library :: studyroomprocess(int top,int op){
 	}
 
 }
+void library :: graduate_studyroomprocess(int top,int op){
+	int i,j,k;
+	int flag = 0;
+	int snum,mnum,time;
+	snum = atoi(sdat[op-1][2].c_str());
+	mnum = atoi(sdat[op-1][6].c_str());
+	time = atoi(sdat[op-1][7].c_str());
+	roomclear(1,op);
+	if((snum> 10)||(snum <1))
+		write(top,op,8,0);
+	else{
+		if((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))
+			write(top,op,9,0);
+		else{
+			//check first member
+			for(i=0;i<n[4];i++){
+				if(Graduate[i].name == sdat[op-1][5]){
+					flag =1;
+					break;
+				}
+			}
+			if(sdat[op-1][3] == "B"){
+				if(flag ==1){
+					if(Graduate[i].sr.state == 1)
+						write(top,op,11,0);
+					else{
+						
+						if((mnum > 6)|| (mnum <1)){
+							write(top,op,12,0);
+						}
+						else if((time > 3) ||(time <1)){
+							write(top,op,13,0);
+						}
+						else if(sroom[snum].state == 0){
+							write(top,op,0,0);
+							sroom[snum].day = sdattime[op-1][0];
+							sroom[snum].start = sdattime[op-1][1];
+							if(sdattime[op-1][1]+ time >18)
+								sroom[snum].during = 18 -sdattime[op-1][1];
+							else
+								sroom[snum].during = time;
+							sroom[snum].state = 1;
+							Graduate[i].sr= sroom[snum];
+						}
+						else				
+							write(top,op,14,sroom[snum].during+sroom[snum].start);
+					}	
+				}	
+				else{
+					Graduate[n[4]].clear();
+					Graduate[n[4]].name = sdat[op-1][5];
+					if((mnum > 6)|| (mnum <1)){
+						write(top,op,12,0);
+					}
+					else if((time > 3) ||(time <1)){
+						write(top,op,13,0);
+					}
+					else if(sroom[snum].state == 0){
+						write(top,op,0,0);
+						sroom[snum].day = sdattime[op-1][0];
+						sroom[snum].start = sdattime[op-1][1];
+						if(sdattime[op-1][1]+ time >18)
+							sroom[snum].during = 18 -sdattime[op-1][1];
+						else
+							sroom[snum].during = time;
+						sroom[snum].state =1;
+						Graduate[n[4]].sr= sroom[snum];
+					}
+					else
+						write(top,op,14,sroom[snum].during+sroom[snum].start);
+					n[4]++;
+				}
+			}
+			
+			else if(sdat[op-1][3] == "R"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(top,op,0,0);
+						sroom[snum].clear();
+						Graduate[i].sr.clear();
+					}
+					else
+						write(top,op,10,0);
+				}
+			}
+			
+			else if(sdat[op-1][3] == "E"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(top,op,0,0);
+						sroom[snum].state = 2;
+						Graduate[i].sr = sroom[snum];
+					}
+					else
+						write(top,op,10,0);
+			
+				}
+			}
+			else if(sdat[op-1][3] == "C"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 2){
+						write(top,op,0,0);
+						sroom[snum].state = 1;
+						Graduate[i].sr= sroom[snum];
+					}
+					else
+						write(top,op,10,0);
+			
+				}
+			}
+			flag =0;
+		}
+	}
 
-void library :: seatprocess(int top,int op){
+}
+void library :: faculty_studyroomprocess(int top,int op){
+	int i,j,k;
+	int flag = 0;
+	int snum,mnum,time;
+	snum = atoi(sdat[op-1][2].c_str());
+	mnum = atoi(sdat[op-1][6].c_str());
+	time = atoi(sdat[op-1][7].c_str());
+	roomclear(1,op);
+	if((snum> 10)||(snum <1))
+		write(top,op,8,0);
+	else{
+		if((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))
+			write(top,op,9,0);
+		else{
+			//check first member
+			for(i=0;i<n[5];i++){
+				if(Faculty[i].name == sdat[op-1][5]){
+					flag =1;
+					break;
+				}
+			}
+			if(sdat[op-1][3] == "B"){
+				if(flag ==1){
+					if(Faculty[i].sr.state == 1)
+						write(top,op,11,0);
+					else{
+						
+						if((mnum > 6)|| (mnum <1)){
+							write(top,op,12,0);
+						}
+						else if((time > 3) ||(time <1)){
+							write(top,op,13,0);
+						}
+						else if(sroom[snum].state == 0){
+							write(top,op,0,0);
+							sroom[snum].day = sdattime[op-1][0];
+							sroom[snum].start = sdattime[op-1][1];
+							if(sdattime[op-1][1]+ time >18)
+								sroom[snum].during = 18 -sdattime[op-1][1];
+							else
+								sroom[snum].during = time;
+							sroom[snum].state = 1;
+							Faculty[i].sr= sroom[snum];
+						}
+						else				
+							write(top,op,14,sroom[snum].during+sroom[snum].start);
+					}	
+				}	
+				else{
+					Faculty[n[5]].clear();
+					Faculty[n[5]].name = sdat[op-1][5];
+					if((mnum > 6)|| (mnum <1)){
+						write(top,op,12,0);
+					}
+					else if((time > 3) ||(time <1)){
+						write(top,op,13,0);
+					}
+					else if(sroom[snum].state == 0){
+						write(top,op,0,0);
+						sroom[snum].day = sdattime[op-1][0];
+						sroom[snum].start = sdattime[op-1][1];
+						if(sdattime[op-1][1]+ time >18)
+							sroom[snum].during = 18 -sdattime[op-1][1];
+						else
+							sroom[snum].during = time;
+						sroom[snum].state =1;
+						Faculty[n[5]].sr= sroom[snum];
+					}
+					else
+						write(top,op,14,sroom[snum].during+sroom[snum].start);
+					n[5]++;
+				}
+			}
+			
+			else if(sdat[op-1][3] == "R"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(top,op,0,0);
+						sroom[snum].clear();
+						Faculty[i].sr.clear();
+					}
+					else
+						write(top,op,10,0);
+				}
+			}
+			
+			else if(sdat[op-1][3] == "E"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 1){
+						write(top,op,0,0);
+						sroom[snum].state = 2;
+						Faculty[i].sr = sroom[snum];
+					}
+					else
+						write(top,op,10,0);
+			
+				}
+			}
+			else if(sdat[op-1][3] == "C"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					if(sroom[snum].state == 2){
+						write(top,op,0,0);
+						sroom[snum].state = 1;
+						Faculty[i].sr= sroom[snum];
+					}
+					else
+						write(top,op,10,0);
+			
+				}
+			}
+			flag =0;
+		}
+	}
+
+}
+void library :: undergraduate_seatprocess(int top,int op){
 	int i,j,k;
 	int flag = 0;
 	int snum,mnum,time;
@@ -2477,6 +2764,324 @@ void library :: seatprocess(int top,int op){
 	}
 
 }
+void library :: graduate_seatprocess(int top,int op){
+	int i,j,k;
+	int flag = 0;
+	int snum,mnum,time;
+	int temp;
+	snum = atoi(sdat[op-1][2].c_str());
+	mnum = atoi(sdat[op-1][6].c_str());
+	time = atoi(sdat[op-1][7].c_str());
+	roomclear(2,op);
+	if((snum> 3)||(snum <1))
+		write(top,op,8,0);
+	else{
+		if(((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))&& (snum == 3))
+			write(top,op,9,0);
+		else if(((sdattime[op-1][1] >21)||(sdattime[op-1][1]<9))&&(snum == 2))
+			write(top,op,9,1);
+		else{
+			//check first member
+			for(i=0;i<n[4];i++){
+				if(!(Graduate[i].name.compare(sdat[op-1][5]))){
+					flag =1;
+
+					break;
+				}
+			}
+			if(sdat[op-1][3] == "B"){
+				if(flag ==1){
+					if(Graduate[i].st.state != 0)
+						write(top,op,11,0);
+					else{
+						
+						if(mnum > 1){
+							write(top,op,12,0);
+						}
+						else if((time > 3) ||(time <1)){
+							write(top,op,13,0);
+						}
+						else{
+							for(j=0;j<50;j++){
+								if(snum == 1){
+									if(seat1[j].state == 0){
+										write(top,op,0,0);
+										seat1[j].day = sdattime[op-1][0];
+										seat1[j].start = sdattime[op-1][1];
+										if(seat1[j].start + time > 23)
+											seat1[j].during = 24 - seat1[j].start;
+										else
+											seat1[j].during = time;
+										seat1[j].state =1;
+										seat1[j].name = Graduate[i].name;
+										Graduate[i].st = seat1[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat1[k].start+seat1[k].during;
+											else{
+												if(temp > seat1[k].start +seat1[k].during)
+													temp = seat1[k].start+seat1[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+								else if(snum == 2){
+									if(seat2[j].state == 0){
+										write(top,op,0,0);
+										seat2[j].day = sdattime[op-1][0];
+										seat2[j].start = sdattime[op-1][1];
+										if(seat2[j].start + time > 20)
+											seat2[j].during = 21 - seat2[j].start;
+										else
+											seat2[j].during = time;
+										seat2[j].state =1;
+										seat2[j].name = Graduate[i].name;
+										Graduate[i].st = seat2[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat2[k].start+seat2[k].during;
+											else{
+												if(temp > seat2[k].start +seat2[k].during)
+													temp = seat2[k].start+seat2[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+
+								else if(snum == 3){
+									if(seat3[j].state == 0){
+										write(top,op,0,0);
+										seat3[j].day = sdattime[op-1][0];
+										seat3[j].start = sdattime[op-1][1];
+										if(seat3[j].start + time > 17)
+											seat3[j].during = 18 - seat3[j].start;
+										else
+											seat3[j].during = time;
+										seat3[j].state =1;
+										seat3[j].name = Graduate[i].name;
+										Graduate[i].st = seat3[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat3[k].start+seat3[k].during;
+											else{
+												if(temp > seat3[k].start +seat3[k].during)
+													temp = seat3[k].start+seat3[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+
+							}	
+						}
+					}
+				}	
+				else{
+					Graduate[n[4]].clear();
+					Graduate[n[4]].name = sdat[op-1][5];
+					if(mnum > 1){
+						write(top,op,12,0);
+					}
+					else if((time > 3) ||(time <1)){
+						write(top,op,13,0);
+					}
+					else{
+						for(j=0;j<50;j++){
+							if(snum == 1){ 
+								if(seat1[j].state == 0){
+									write(top,op,0,0);
+									seat1[j].day = sdattime[op-1][0];
+									seat1[j].start = sdattime[op-1][1];
+									if(seat1[j].start + time > 23)
+										seat1[j].during = 24 - seat1[j].start;
+									else
+										seat1[j].during = time;
+									seat1[j].state =1;
+									seat1[j].name = Graduate[n[4]].name;
+									Graduate[n[4]].st = seat1[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat1[k].start+seat1[k].during;
+										else{
+											if(temp > seat1[k].start +seat1[k].during)
+												temp = seat1[k].start+seat1[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+							else if(snum == 2){
+								if(seat2[j].state == 0){
+									write(top,op,0,0);
+									seat2[j].day = sdattime[op-1][0];
+									seat2[j].start = sdattime[op-1][1];
+									if(seat2[j].start + time > 20)
+										seat2[j].during = 21 - seat2[j].start;
+									else
+										seat2[j].during = time;
+									seat2[j].state =1;
+									seat2[j].name = Graduate[n[4]].name;
+									Graduate[n[4]].st = seat2[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat2[k].start+seat2[k].during;
+										else{
+											if(temp > seat2[k].start +seat2[k].during)
+												temp = seat2[k].start+seat2[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+							else if(snum == 3){
+								if(seat3[j].state == 0){
+									write(top,op,0,0);
+									seat3[j].day = sdattime[op-1][0];
+									seat3[j].start = sdattime[op-1][1];
+									if(seat3[j].start + time > 17)
+										seat3[j].during = 18 - seat3[j].start;
+									else
+										seat3[j].during = time;
+									seat3[j].state =1;
+									seat3[j].name = Graduate[n[4]].name;
+									Graduate[n[4]].st = seat3[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat3[k].start+seat3[k].during;
+										else{
+											if(temp > seat3[k].start +seat3[k].during)
+												temp = seat3[k].start+seat3[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+
+						}	
+					}
+					n[4]++;
+				}	
+			}
+			
+			else if(sdat[op-1][3] == "R"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+
+					for(j=0;j<50;j++){
+						if((Graduate[i].name == seat1[j].name) &&(Graduate[i].st.state !=0)){
+							write(top,op,0,0);
+							seat1[j].clear();
+							Graduate[i].st.clear();
+							break;
+						}
+						if((Graduate[i].name == seat2[j].name) &&(Graduate[i].st.state !=0)){
+							write(top,op,0,0);
+							seat2[j].clear();
+							Graduate[i].st.clear();
+							break;
+						}
+						if((Graduate[i].name == seat3[j].name) &&(Graduate[i].st.state !=0)){
+							write(top,op,0,0);
+							seat3[j].clear();
+							Graduate[i].st.clear();
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+				}
+			}
+			
+			else if(sdat[op-1][3] == "E"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					for(j=0;j<50;j++){
+						if((Graduate[i].name == seat1[j].name) &&(Graduate[i].st.state ==1)){
+							write(top,op,0,0);
+							seat1[j].state = 2;
+							seat1[j].etime = sdattime[op-1][1];			
+							Graduate[i].st = seat1[j];
+							break;
+						}
+						if((Graduate[i].name == seat2[j].name) &&(Graduate[i].st.state ==1)){
+							write(top,op,0,0);
+							seat2[j].state = 2;
+							seat2[j].etime = sdattime[op-1][1];			
+							Graduate[i].st = seat2[j];
+							break;
+						}
+						if((Graduate[i].name == seat3[j].name) &&(Graduate[i].st.state ==1)){
+							write(top,op,0,0);
+							seat3[j].state = 2;
+							seat3[j].etime = sdattime[op-1][1];			
+							Graduate[i].st = seat3[j];
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+				}
+
+			}
+			else if(sdat[op-1][3] == "C"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					for(j=0;j<50;j++){
+						if((Graduate[i].name == seat1[j].name) &&(Graduate[i].st.state ==2)){
+							write(top,op,0,0);
+							seat1[j].state = 1;
+							seat1[j].etime = 0;			
+							Graduate[i].st = seat1[j];
+							break;
+						}
+						if((Graduate[i].name == seat2[j].name) &&(Graduate[i].st.state ==2)){
+							write(top,op,0,0);
+							seat2[j].state = 1;
+							seat2[j].etime = 0;			
+							Graduate[i].st = seat2[j];
+							break;
+						}
+						if((Graduate[i].name == seat3[j].name) &&(Graduate[i].st.state ==2)){
+							write(top,op,0,0);
+							seat3[j].state = 1;
+							seat3[j].etime = 0;			
+							Graduate[i].st = seat3[j];
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+			
+				}
+			}
+			flag =0;
+		}
+	}
+
+}
 void library :: bookprocess(int top,int op){
 	if(idat[op-1][4] == "Undergraduate")
 		undergraduate_bookprocess(top,op);
@@ -2493,6 +3098,324 @@ void library :: magazineprocess(int top,int op){
 	else if(idat[op-1][4] == "Faculty")
 		faculty_magazineprocess(top,op);
 }
+void library :: faculty_seatprocess(int top,int op){
+	int i,j,k;
+	int flag = 0;
+	int snum,mnum,time;
+	int temp;
+	snum = atoi(sdat[op-1][2].c_str());
+	mnum = atoi(sdat[op-1][6].c_str());
+	time = atoi(sdat[op-1][7].c_str());
+	roomclear(2,op);
+	if((snum> 3)||(snum <1))
+		write(top,op,8,0);
+	else{
+		if(((sdattime[op-1][1] >18)||(sdattime[op-1][1]<9))&& (snum == 3))
+			write(top,op,9,0);
+		else if(((sdattime[op-1][1] >21)||(sdattime[op-1][1]<9))&&(snum == 2))
+			write(top,op,9,1);
+		else{
+			//check first member
+			for(i=0;i<n[5];i++){
+				if(!(Faculty[i].name.compare(sdat[op-1][5]))){
+					flag =1;
+
+					break;
+				}
+			}
+			if(sdat[op-1][3] == "B"){
+				if(flag ==1){
+					if(Faculty[i].st.state != 0)
+						write(top,op,11,0);
+					else{
+						
+						if(mnum > 1){
+							write(top,op,12,0);
+						}
+						else if((time > 3) ||(time <1)){
+							write(top,op,13,0);
+						}
+						else{
+							for(j=0;j<50;j++){
+								if(snum == 1){
+									if(seat1[j].state == 0){
+										write(top,op,0,0);
+										seat1[j].day = sdattime[op-1][0];
+										seat1[j].start = sdattime[op-1][1];
+										if(seat1[j].start + time > 23)
+											seat1[j].during = 24 - seat1[j].start;
+										else
+											seat1[j].during = time;
+										seat1[j].state =1;
+										seat1[j].name = Faculty[i].name;
+										Faculty[i].st = seat1[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat1[k].start+seat1[k].during;
+											else{
+												if(temp > seat1[k].start +seat1[k].during)
+													temp = seat1[k].start+seat1[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+								else if(snum == 2){
+									if(seat2[j].state == 0){
+										write(top,op,0,0);
+										seat2[j].day = sdattime[op-1][0];
+										seat2[j].start = sdattime[op-1][1];
+										if(seat2[j].start + time > 20)
+											seat2[j].during = 21 - seat2[j].start;
+										else
+											seat2[j].during = time;
+										seat2[j].state =1;
+										seat2[j].name = Faculty[i].name;
+										Faculty[i].st = seat2[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat2[k].start+seat2[k].during;
+											else{
+												if(temp > seat2[k].start +seat2[k].during)
+													temp = seat2[k].start+seat2[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+
+								else if(snum == 3){
+									if(seat3[j].state == 0){
+										write(top,op,0,0);
+										seat3[j].day = sdattime[op-1][0];
+										seat3[j].start = sdattime[op-1][1];
+										if(seat3[j].start + time > 17)
+											seat3[j].during = 18 - seat3[j].start;
+										else
+											seat3[j].during = time;
+										seat3[j].state =1;
+										seat3[j].name = Faculty[i].name;
+										Faculty[i].st = seat3[j];
+										break;
+									}
+									else if(j==49){
+										for(k=0;k<50;k++){
+											if(k==0)
+												temp = seat3[k].start+seat3[k].during;
+											else{
+												if(temp > seat3[k].start +seat3[k].during)
+													temp = seat3[k].start+seat3[k].during;
+											}
+										}
+										write(top,op,14,temp);
+									}
+								}
+
+							}	
+						}
+					}
+				}	
+				else{
+					Faculty[n[5]].clear();
+					Faculty[n[5]].name = sdat[op-1][5];
+					if(mnum > 1){
+						write(top,op,12,0);
+					}
+					else if((time > 3) ||(time <1)){
+						write(top,op,13,0);
+					}
+					else{
+						for(j=0;j<50;j++){
+							if(snum == 1){ 
+								if(seat1[j].state == 0){
+									write(top,op,0,0);
+									seat1[j].day = sdattime[op-1][0];
+									seat1[j].start = sdattime[op-1][1];
+									if(seat1[j].start + time > 23)
+										seat1[j].during = 24 - seat1[j].start;
+									else
+										seat1[j].during = time;
+									seat1[j].state =1;
+									seat1[j].name = Faculty[n[5]].name;
+									Faculty[n[5]].st = seat1[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat1[k].start+seat1[k].during;
+										else{
+											if(temp > seat1[k].start +seat1[k].during)
+												temp = seat1[k].start+seat1[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+							else if(snum == 2){
+								if(seat2[j].state == 0){
+									write(top,op,0,0);
+									seat2[j].day = sdattime[op-1][0];
+									seat2[j].start = sdattime[op-1][1];
+									if(seat2[j].start + time > 20)
+										seat2[j].during = 21 - seat2[j].start;
+									else
+										seat2[j].during = time;
+									seat2[j].state =1;
+									seat2[j].name = Faculty[n[5]].name;
+									Faculty[n[5]].st = seat2[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat2[k].start+seat2[k].during;
+										else{
+											if(temp > seat2[k].start +seat2[k].during)
+												temp = seat2[k].start+seat2[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+							else if(snum == 3){
+								if(seat3[j].state == 0){
+									write(top,op,0,0);
+									seat3[j].day = sdattime[op-1][0];
+									seat3[j].start = sdattime[op-1][1];
+									if(seat3[j].start + time > 17)
+										seat3[j].during = 18 - seat3[j].start;
+									else
+										seat3[j].during = time;
+									seat3[j].state =1;
+									seat3[j].name = Faculty[n[5]].name;
+									Faculty[n[5]].st = seat3[j];
+									break;
+								}
+								else if(j==49){
+									for(k=0;k<50;k++){
+										if(k==0)
+											temp = seat3[k].start+seat3[k].during;
+										else{
+											if(temp > seat3[k].start +seat3[k].during)
+												temp = seat3[k].start+seat3[k].during;
+										}
+									}
+									write(top,op,14,temp);
+								}
+							}
+
+						}	
+					}
+					n[5]++;
+				}	
+			}
+			
+			else if(sdat[op-1][3] == "R"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+
+					for(j=0;j<50;j++){
+						if((Faculty[i].name == seat1[j].name) &&(Faculty[i].st.state !=0)){
+							write(top,op,0,0);
+							seat1[j].clear();
+							Faculty[i].st.clear();
+							break;
+						}
+						if((Faculty[i].name == seat2[j].name) &&(Faculty[i].st.state !=0)){
+							write(top,op,0,0);
+							seat2[j].clear();
+							Faculty[i].st.clear();
+							break;
+						}
+						if((Faculty[i].name == seat3[j].name) &&(Faculty[i].st.state !=0)){
+							write(top,op,0,0);
+							seat3[j].clear();
+							Faculty[i].st.clear();
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+				}
+			}
+			
+			else if(sdat[op-1][3] == "E"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					for(j=0;j<50;j++){
+						if((Faculty[i].name == seat1[j].name) &&(Faculty[i].st.state ==1)){
+							write(top,op,0,0);
+							seat1[j].state = 2;
+							seat1[j].etime = sdattime[op-1][1];			
+							Faculty[i].st = seat1[j];
+							break;
+						}
+						if((Faculty[i].name == seat2[j].name) &&(Faculty[i].st.state ==1)){
+							write(top,op,0,0);
+							seat2[j].state = 2;
+							seat2[j].etime = sdattime[op-1][1];			
+							Faculty[i].st = seat2[j];
+							break;
+						}
+						if((Faculty[i].name == seat3[j].name) &&(Faculty[i].st.state ==1)){
+							write(top,op,0,0);
+							seat3[j].state = 2;
+							seat3[j].etime = sdattime[op-1][1];			
+							Faculty[i].st = seat3[j];
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+				}
+
+			}
+			else if(sdat[op-1][3] == "C"){
+				if(flag == 0)
+					write(top,op,10,0);
+				else{
+					for(j=0;j<50;j++){
+						if((Faculty[i].name == seat1[j].name) &&(Faculty[i].st.state ==2)){
+							write(top,op,0,0);
+							seat1[j].state = 1;
+							seat1[j].etime = 0;			
+							Faculty[i].st = seat1[j];
+							break;
+						}
+						if((Faculty[i].name == seat2[j].name) &&(Faculty[i].st.state ==2)){
+							write(top,op,0,0);
+							seat2[j].state = 1;
+							seat2[j].etime = 0;			
+							Faculty[i].st = seat2[j];
+							break;
+						}
+						if((Faculty[i].name == seat3[j].name) &&(Faculty[i].st.state ==2)){
+							write(top,op,0,0);
+							seat3[j].state = 1;
+							seat3[j].etime = 0;			
+							Faculty[i].st = seat3[j];
+							break;
+						}
+						if(j==49)
+							write(top,op,10,0);
+					}
+			
+				}
+			}
+			flag =0;
+		}
+	}
+
+}
 void library :: ebookprocess(int top,int op){
 	if(idat[op-1][4] == "Undergraduate")
 		undergraduate_ebookprocess(top,op);
@@ -2508,6 +3431,22 @@ void library :: resourceprocess(int top,int op){
 		ebookprocess(top,op);
 	else if(idat[op-1][1] == "Magazine")
 		magazineprocess(top,op);
+}
+void library :: studyroomprocess(int top,int op){
+	if(idat[op-1][4] == "Undergraduate")
+		undergraduate_studyroomprocess(top,op);
+	else if(idat[op-1][4] == "Graduate")
+		graduate_studyroomprocess(top,op);
+	else if(idat[op-1][4] == "Faculty")
+		faculty_studyroomprocess(top,op);
+}
+void library :: seatprocess(int top,int op){
+	if(idat[op-1][4] == "Undergraduate")
+		undergraduate_seatprocess(top,op);
+	else if(idat[op-1][4] == "Graduate")
+		graduate_seatprocess(top,op);
+	else if(idat[op-1][4] == "Faculty")
+		faculty_seatprocess(top,op);
 }
 void library :: spaceprocess(int top, int op){
 try{

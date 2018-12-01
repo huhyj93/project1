@@ -21,29 +21,47 @@ class library{
 		int sdattime[200][2];
 		int n[6];
 		ofstream out;
+		//get data file
 		void set();
 		void setidat();
 		void setsdat();
-		void roomclear(int type,int op);
-		void studyroomprocess(int top,int op);
-		void seatprocess(int top,int op);
-		void spaceprocess(int top,int op);
+
+		//write fuction
 		void write(int top,int op, int rc, int time);
+		//bookprocess
 		void undergraduate_bookprocess(int top,int op);
 		void graduate_bookprocess(int top,int op);
 		void faculty_bookprocess(int top,int op);
 		void bookprocess(int top,int op);
+		//magazine process
 		int magazinetest(string name,int time);
 		void undergraduate_magazineprocess(int top,int op);
 		void graduate_magazineprocess(int top,int op);
 		void faculty_magazineprocess(int top,int op);
 		void magazineprocess(int top,int op);
+		//ebook process
 		void ebookclear(int op,int state);
 		void undergraduate_ebookprocess(int top,int op);
 		void graduate_ebookprocess(int top,int op);
 		void faculty_ebookprocess(int top,int op);
 		void ebookprocess(int top,int op);
+		//resource process
 		void resourceprocess(int top,int op);
+		//roomclear
+		void roomclear(int type,int op);
+		//studyroomprocess
+		void undergraduate_studyroomprocess(int top,int op);
+		void graduate_studyroomprocess(int top,int op);
+		void faculty_studyroomprocess(int top,int op);	
+		void studyroomprocess(int top,int op);
+		//seat process
+		void undergraduate_seatprocess(int top,int op);
+		void graduate_seatprocess(int top,int op);
+		void faculty_seatprocess(int top,int op);
+		void seatprocess(int top,int op);
+		//space process
+		void spaceprocess(int top,int op);
+		//total process
 		void process();
 };
 
