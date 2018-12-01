@@ -8,16 +8,24 @@ class member{
 		int state;
 		int late;
 		int date;
-		int booknum;	
-		
+		int booknum;
+		int mznum;
+		int ebnum;
+		int cap;	
+		book rent[10];
+		magazine rent1[10];
+		e_book rent2[50];
+		void clear();
 };
 
 class undergraduate : public member{
-	public:
-		book rent[2];
-		studyroom sr;
-		seat st;
-		void clear();
+
+};
+class graduate : public member{
+
+};
+class faculty : public member{
+
 };
 
 

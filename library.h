@@ -3,6 +3,7 @@
 #include <fstream>
 class library{
 	public: 
+
 		book Book[200];
 		undergraduate Undergraduate[200];
 		studyroom sroom[10];
@@ -20,13 +21,26 @@ class library{
 		void set();
 		void setidat();
 		void setsdat();
-		void write(int top,int op, int rc, int time);
-		void bookprocess(int top,int op);
 		void roomclear(int type,int op);
 		void studyroomprocess(int top,int op);
 		void seatprocess(int top,int op);
-		void resourceprocess(int top,int op);
 		void spaceprocess(int top,int op);
+		void write(int top,int op, int rc, int time);
+		void undergraduate_bookprocess(int top,int op);
+		void graduate_bookprocess(int top,int op);
+		void faculty_bookprocess(int top,int op);
+		void bookprocess(int top,int op);
+		int magazinetest(string name,int time);
+		void undergraduate_magazineprocess(int top,int op);
+		void graduate_magazineprocess(int top,int op);
+		void faculty_magazineprocess(int top,int op);
+		void magazineprocess(int top,int op);
+		void ebookclear(int op,int state);
+		void undergraduate_ebookprocess(int top,int op);
+		void graduate_ebookprocess(int top,int op);
+		void faculty_ebookprocess(int top,int op);
+		void ebookprocess(int top,int op);
+		void resourceprocess(int top,int op);
 		void process();
 };
 
