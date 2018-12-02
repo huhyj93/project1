@@ -63,27 +63,28 @@ void undergraduate_bookprocess(int top,int op);
 void graduate_bookprocess(int top,int op);
 void faculty_bookprocess(int top,int op);
 void bookprocess(int top,int op);
-````````````````
 
-위 부분은 각각의 멤버별로 book을 빌리는 함수를 만들었고 *bookprocess* 함수에서 멤버별로 구분해서 진행되도록 만들었다.
-마찬가지로 magazine과 e-book에 대한 함수도 멤버별로 만들고 합쳤다.
-
-``````````
 //magazine process
 int magazinetest(string name,int time);
 void undergraduate_magazineprocess(int top,int op);
 void graduate_magazineprocess(int top,int op);
 void faculty_magazineprocess(int top,int op);
 void magazineprocess(int top,int op);
+
 //ebook process
 void ebookclear(int op,int state);
 void undergraduate_ebookprocess(int top,int op);
 void graduate_ebookprocess(int top,int op);
 void faculty_ebookprocess(int top,int op);
 void ebookprocess(int top,int op);
+
 //resource process
 void resourceprocess(int top,int op);
-``````````
+````````````````
+
+위 부분은 각각의 멤버별로 book을 빌리는 함수를 만들었고 *bookprocess* 함수에서 멤버별로 구분해서 진행되도록 만들었다.
+
+마찬가지로 magazine과 e-book에 대한 함수도 멤버별로 만들고 합쳤다.
 
 여기서 *magazinetest* 함수는 멤버 전체를 체크해서 magazine을 빌렸는지 체크하는 함수이고 *ebookclear* 함수는 기간이 지난 e-book을 지우는 함수이다.
 
@@ -95,11 +96,13 @@ void undergraduate_studyroomprocess(int top,int op);
 void graduate_studyroomprocess(int top,int op);
 void faculty_studyroomprocess(int top,int op);	
 void studyroomprocess(int top,int op);
+
 //seat process
 void undergraduate_seatprocess(int top,int op);
 void graduate_seatprocess(int top,int op);
 void faculty_seatprocess(int top,int op);
 void seatprocess(int top,int op);
+
 //space process
 void spaceprocess(int top,int op);
 ``````````````
