@@ -58,31 +58,31 @@ class e_book: public resource{
 그리고 새로운 기능을 추가할 수 있는 함수들을 library.h에 추가했다. 각각의 파트에 대해서 설명하겠다.
 
 ```````````
-		//bookprocess
-		void undergraduate_bookprocess(int top,int op);
-		void graduate_bookprocess(int top,int op);
-		void faculty_bookprocess(int top,int op);
-		void bookprocess(int top,int op);
+//bookprocess
+void undergraduate_bookprocess(int top,int op);
+void graduate_bookprocess(int top,int op);
+void faculty_bookprocess(int top,int op);
+void bookprocess(int top,int op);
 ````````````````
 
 위 부분은 각각의 멤버별로 book을 빌리는 함수를 만들었고 *bookprocess* 함수에서 멤버별로 구분해서 진행되도록 만들었다.
 마찬가지로 magazine과 e-book에 대한 함수도 멤버별로 만들고 합쳤다.
 
 ``````````
-		//magazine process
-		int magazinetest(string name,int time);
-		void undergraduate_magazineprocess(int top,int op);
-		void graduate_magazineprocess(int top,int op);
-		void faculty_magazineprocess(int top,int op);
-		void magazineprocess(int top,int op);
-		//ebook process
-		void ebookclear(int op,int state);
-		void undergraduate_ebookprocess(int top,int op);
-		void graduate_ebookprocess(int top,int op);
-		void faculty_ebookprocess(int top,int op);
-		void ebookprocess(int top,int op);
-		//resource process
-		void resourceprocess(int top,int op);
+//magazine process
+int magazinetest(string name,int time);
+void undergraduate_magazineprocess(int top,int op);
+void graduate_magazineprocess(int top,int op);
+void faculty_magazineprocess(int top,int op);
+void magazineprocess(int top,int op);
+//ebook process
+void ebookclear(int op,int state);
+void undergraduate_ebookprocess(int top,int op);
+void graduate_ebookprocess(int top,int op);
+void faculty_ebookprocess(int top,int op);
+void ebookprocess(int top,int op);
+//resource process
+void resourceprocess(int top,int op);
 ``````````
 
 여기서 *magazinetest* 함수는 멤버 전체를 체크해서 magazine을 빌렸는지 체크하는 함수이고 *ebookclear* 함수는 기간이 지난 e-book을 지우는 함수이다.
@@ -90,25 +90,25 @@ class e_book: public resource{
 또한, *resourceprocess* 함수는 모든 resource들을 합치는 함수이다.
 
 ``````````
-		//studyroomprocess
-		void undergraduate_studyroomprocess(int top,int op);
-		void graduate_studyroomprocess(int top,int op);
-		void faculty_studyroomprocess(int top,int op);	
-		void studyroomprocess(int top,int op);
-		//seat process
-		void undergraduate_seatprocess(int top,int op);
-		void graduate_seatprocess(int top,int op);
-		void faculty_seatprocess(int top,int op);
-		void seatprocess(int top,int op);
-		//space process
-		void spaceprocess(int top,int op);
+//studyroomprocess
+void undergraduate_studyroomprocess(int top,int op);
+void graduate_studyroomprocess(int top,int op);
+void faculty_studyroomprocess(int top,int op);	
+void studyroomprocess(int top,int op);
+//seat process
+void undergraduate_seatprocess(int top,int op);
+void graduate_seatprocess(int top,int op);
+void faculty_seatprocess(int top,int op);
+void seatprocess(int top,int op);
+//space process
+void spaceprocess(int top,int op);
 ``````````````
 
 또한, member별로 studyroom과 seat을 관리하는 함수를 만들었고 *spaceprocess* 에서 두가지 기능을 합친다.
 
 ``````````````
-		//total process
-		void process();
+//total process
+void process();
 ``````````````
 
 마지막으로 *process*함수에서 모든 기능을 합친다.
@@ -146,7 +146,6 @@ clean:
 
 ```
 make
-
 ```
 
 ## Versioning
