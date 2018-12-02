@@ -1356,7 +1356,7 @@ void library :: undergraduate_magazineprocess(int top,int op){
 		int date = 360*atoi(idat[op-1][2].substr(j+1,l-j-1).c_str()) + 30*atoi(idat[op-1][2].substr(l+1,k-l-1).c_str());
 		idat[op-1][2] = idat[op-1][2].substr(0,j);
 		for(i = 0; i< n[1]; i++){
-			if((Magazine[i].name == idat[op-1][2]) &&(idattime[op-1] - date < 360)){
+			if((Magazine[i].name == idat[op-1][2]) &&((idattime[op-1] - date < 360)||(idat[op-1][3] == "R"))){
 				flag = 1;
 				//return
 				if(idat[op-1][3] == "R"){
@@ -1550,7 +1550,7 @@ void library :: graduate_magazineprocess(int top,int op){
 		int date = 360*atoi(idat[op-1][2].substr(j+1,l-j-1).c_str()) + 30*atoi(idat[op-1][2].substr(l+1,k-l-1).c_str());
 		idat[op-1][2] = idat[op-1][2].substr(0,j);
 		for(i = 0; i< n[1]; i++){
-			if((Magazine[i].name == idat[op-1][2]) &&(idattime[op-1] - date < 360)){
+			if((Magazine[i].name == idat[op-1][2]) &&((idattime[op-1] - date < 360)||(idat[op-1][3] == "R"))){
 				flag = 1;
 				//return
 				if(idat[op-1][3] == "R"){
@@ -1761,7 +1761,7 @@ void library :: faculty_magazineprocess(int top,int op){
 		int date = 360*atoi(idat[op-1][2].substr(j+1,l-j-1).c_str()) + 30*atoi(idat[op-1][2].substr(l+1,k-l-1).c_str());
 		idat[op-1][2] = idat[op-1][2].substr(0,j);
 		for(i = 0; i< n[1]; i++){
-			if((Magazine[i].name == idat[op-1][2]) &&(idattime[op-1] - date < 360)){
+			if((Magazine[i].name == idat[op-1][2]) &&((idattime[op-1] - date < 360)||(idat[op-1][3] == "R"))){
 				flag = 1;
 				//return
 				if(idat[op-1][3] == "R"){
@@ -3433,20 +3433,24 @@ void library :: resourceprocess(int top,int op){
 		magazineprocess(top,op);
 }
 void library :: studyroomprocess(int top,int op){
-	if(idat[op-1][4] == "Undergraduate")
+	if(sdat[op-1][4] == "Undergraduate")
 		undergraduate_studyroomprocess(top,op);
-	else if(idat[op-1][4] == "Graduate")
+	else if(sdat[op-1][4] == "Graduate")
 		graduate_studyroomprocess(top,op);
-	else if(idat[op-1][4] == "Faculty")
+	else if(sdat[op-1][4] == "Faculty"){
 		faculty_studyroomprocess(top,op);
+		cout << top << endl;	
+	}
 }
 void library :: seatprocess(int top,int op){
-	if(idat[op-1][4] == "Undergraduate")
+	if(sdat[op-1][4] == "Undergraduate")
 		undergraduate_seatprocess(top,op);
-	else if(idat[op-1][4] == "Graduate")
+	else if(sdat[op-1][4] == "Graduate")
 		graduate_seatprocess(top,op);
-	else if(idat[op-1][4] == "Faculty")
+	else if(sdat[op-1][4] == "Faculty"){
 		faculty_seatprocess(top,op);
+			cout << top << endl;	
+	}
 }
 void library :: spaceprocess(int top, int op){
 try{
