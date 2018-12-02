@@ -185,6 +185,8 @@ void library :: write(int top,int op, int rc,  int time){
 		case 16:	
 			out << "-1	";
 			break;	
+		case 17:
+			out << "16	Previously borrowed books are overdue, so borrow is limited." << endl;
 		default:
 			break;
 	}
@@ -575,11 +577,17 @@ void library :: graduate_bookprocess(int top,int op){
 									}
 
 									//check restrict member
-									if( Graduate[j].state ==2 )
+									if( Graduate[j].state ==2 ){
 										write(top,op,6,Graduate[j].date);
-									
+										break;	
+									}
+									else if(checkoverdue(j,op, "Graduate") == 1){
+										write(top,op,17,0);	
+										break;
+									}
 									//success borrow
 									else{
+										
 										Graduate[j].books = idat[op-1][2];
 										Book[i].state = 1;
 										Book[i].type = "Graduate";
@@ -770,10 +778,15 @@ void library :: faculty_bookprocess(int top,int op){
 									}
 
 									//check restrict member
-									if( Faculty[j].state ==2 )
+									if( Faculty[j].state ==2 ){
 										write(top,op,6,Faculty[j].date);
-									
-									//success borrow
+										
+																							
+									}
+									else if(checkoverdue(j,op, "Faculty") == 1){
+										write(top,op,17,0);	
+										
+									}									//
 									else{
 										Faculty[j].books = idat[op-1][2];
 										Book[i].state = 1;
@@ -1139,6 +1152,12 @@ void library :: graduate_ebookprocess(int top,int op){
 									write(top,op,6,Graduate[j].date);
 								else if( (Graduate[j].cap +  Ebook[i].cap) > 500)
 									write(top,op,15,0);	
+
+								else if(checkoverdue(j,op, "Graduate") == 1){
+									write(top,op,17,0);	
+									
+								}	
+
 								//success borrow
 								else{
 									Graduate[j].state =1;
@@ -1277,7 +1296,12 @@ void library :: faculty_ebookprocess(int top,int op){
 								if( Faculty[j].state == 2 )
 									write(top,op,6,Faculty[j].date);
 								else if( (Faculty[j].cap +  Ebook[i].cap) > 1000)
-									write(top,op,15,0);	
+									write(top,op,15,0);
+
+								else if(checkoverdue(j,op, "Faculty") == 1){
+									write(top,op,17,0);	
+									
+								}	
 								//success borrow
 								else{
 									Faculty[j].state =1;
@@ -1669,7 +1693,7 @@ void library :: graduate_magazineprocess(int top,int op){
 								}
 								//check already borrow
 								for(k=0;k<(Graduate[j].mznum); k++){
-									if( Magazine[i].name == Graduate[j].rent1[k].name){
+									if( (Magazine[i].name == Graduate[j].rent1[k].name) &&(date == Graduate[j].rent1[k].cap )){
 										flag3=1;
 										write(top,op,4, Graduate[j].rent1[k].date);		
 									}
@@ -1690,8 +1714,16 @@ void library :: graduate_magazineprocess(int top,int op){
 									}
 									else{
 									//check restrict member
-										if( Graduate[j].state ==2 )
-										write(top,op,6,Graduate[j].date);
+										if( Graduate[j].state ==2 ){
+								
+											write(top,op,6,Graduate[j].date);
+														
+																						
+										}		
+										else if(checkoverdue(j,op, "Graduate") == 1){
+											write(top,op,17,0);	
+											
+										}
 									
 									//success borrow
 										else{
@@ -1879,7 +1911,7 @@ void library :: faculty_magazineprocess(int top,int op){
 								}
 								//check already borrow
 								for(k=0;k<(Faculty[j].mznum); k++){
-									if( Magazine[i].name == Faculty[j].rent1[k].name){
+									if(( Magazine[i].name == Faculty[j].rent1[k].name)&&(date == Faculty[j].rent1[k].cap )){
 										flag3=1;
 										write(top,op,4, Faculty[j].rent1[k].date);		
 									}
@@ -1902,6 +1934,10 @@ void library :: faculty_magazineprocess(int top,int op){
 									//check restrict member
 										if(Faculty[j].state ==2 )
 										write(top,op,6,Faculty[j].date);
+										else if(checkoverdue(j,op, "Faculty") == 1){
+											write(top,op,17,0);	
+											
+										}
 									
 									//success borrow
 										else{
@@ -3415,6 +3451,30 @@ void library :: faculty_seatprocess(int top,int op){
 		}
 	}
 
+}
+int library :: checkoverdue(int n, int op, string type){
+	int i,j;
+	if(type == "Graduate"){
+		for(i=0; i<Graduate[n].booknum;i++){
+			if(idattime[op-1] - Graduate[n].rent[i].date > 29)
+				return 1; 		
+		}
+		for(i=0; i<Graduate[n].mznum;i++){
+			if(idattime[op-1] - Graduate[n].rent1[i].date > 29)
+				return 1; 		
+		}	
+	}
+	else if(type == "Faculty"){
+		for(i=0; i<Faculty[n].booknum;i++){
+			if(idattime[op-1] - Faculty[n].rent[i].date > 29)
+				return 1; 		
+		}
+		for(i=0; i<Faculty[n].mznum;i++){
+			if(idattime[op-1] - Faculty[n].rent1[i].date > 29)
+				return 1; 		
+		}			
+	}
+	return 0;
 }
 void library :: ebookprocess(int top,int op){
 	if(idat[op-1][4] == "Undergraduate")

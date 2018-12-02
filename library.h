@@ -46,6 +46,7 @@ class library{
 		void faculty_ebookprocess(int top,int op);
 		void ebookprocess(int top,int op);
 		//resource process
+		int checkoverdue(int n, int op, string type);
 		void resourceprocess(int top,int op);
 		//roomclear
 		void roomclear(int type,int op);
