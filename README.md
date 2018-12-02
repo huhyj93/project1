@@ -53,12 +53,11 @@ class magazine: public resource{
 class e_book: public resource{
 };
 
-
-````````
+``````````````````
 
 그리고 새로운 기능을 추가할 수 있는 함수들을 library.h에 추가했다. 각각의 파트에 대해서 설명하겠다.
 
-```````
+```````````
 		//bookprocess
 		void undergraduate_bookprocess(int top,int op);
 		void graduate_bookprocess(int top,int op);
