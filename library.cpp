@@ -3439,7 +3439,6 @@ void library :: studyroomprocess(int top,int op){
 		graduate_studyroomprocess(top,op);
 	else if(sdat[op-1][4] == "Faculty"){
 		faculty_studyroomprocess(top,op);
-		cout << top << endl;	
 	}
 }
 void library :: seatprocess(int top,int op){
@@ -3448,8 +3447,7 @@ void library :: seatprocess(int top,int op){
 	else if(sdat[op-1][4] == "Graduate")
 		graduate_seatprocess(top,op);
 	else if(sdat[op-1][4] == "Faculty"){
-		faculty_seatprocess(top,op);
-			cout << top << endl;	
+		faculty_seatprocess(top,op);	
 	}
 }
 void library :: spaceprocess(int top, int op){
