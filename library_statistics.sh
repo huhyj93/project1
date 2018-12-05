@@ -1,5 +1,4 @@
 #!/bin/bash
-rm -r result
 case "$1" in
 	resource)
 		case "$2" in
