@@ -315,7 +315,182 @@ case "$1" in
 				mv faculty.dat result/input/;;
 		esac;;		
 	space)
-		;;		
+		case "$2" in
+			date)
+
+				mkdir -p result/space
+
+				touch date.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+
+					if [ "$l0" = "Date[yy/mm/dd/hh]" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> date.dat
+					else
+						if [ $((24*(360*(10*(${3:0:1}) +${3:1:1})+ 30*(10*(${3:3:1}) +${3:4:1})+10*(${3:6:1}) +${3:7:1}) + 10*(${3:9:1}) + ${3:10:1})) -le  $((24*(360*(10*(${l0:2:1}) +${l0:3:1})+ 30*(10*(${l0:5:1}) +${l0:6:1})+10*(${l0:8:1}) +${l0:9:1}) + 10*(${l0:11:1}) + ${l0:12:1})) -a $((24*(360*(10*(${4:0:1}) +${4:1:1})+ 30*(10*(${4:3:1}) +${4:4:1})+10*(${4:6:1}) +${4:7:1})+ 10*(${4:9:1}) + ${4:10:1})) -ge  $((24*(360*(10*(${l0:2:1}) +${l0:3:1})+ 30*(10*(${l0:5:1}) +${l0:6:1})+10*(${l0:8:1}) +${l0:9:1}) + 10*(${l0:11:1}) + ${l0:12:1}))  ]
+						then
+							echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> date.dat
+						fi
+					fi
+				done < space.dat
+				mv date.dat result/space/;;
+			studyroom)
+				mkdir -p result/space
+				touch studyroom.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l1" = "Space_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
+					elif [ "$3" = "all" ]
+					then
+						if [ "$l1" = "StudyRoom" ]
+						then
+							echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
+						fi
+				
+					elif [ "$l1" = "StudyRoom" -a "$3" = "$l2" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
+					fi
+				done < space.dat
+				mv studyroom.dat result/space/;;
+			seat)
+				mkdir -p result/space
+				touch seat.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l1" = "Space_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
+					elif [ "$3" = "all" ]
+					then
+						if [ "$l1" = "Seat" ]
+						then
+							echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
+						fi
+					elif [ "$l1" = "Seat" -a "$3" = "$l2" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
+					fi
+				done < space.dat
+				mv seat.dat result/space/;;	
+			undergraduate)
+				mkdir -p result/space
+				
+				touch undergraduate.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
+					elif [ "$l4" = "Undergraduate" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
+					fi
+				done < space.dat
+				mv undergraduate.dat result/space/;;
+			graduate)
+				mkdir -p result/space
+				
+				touch graduate.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
+					elif [ "$l4" = "Graduate" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
+					fi
+				done < space.dat
+				mv graduate.dat result/space/;;
+			faculty)
+				mkdir -p result/space
+				
+				touch faculty.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
+					elif [ "$l4" = "Faculty" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
+					fi
+				done < space.dat
+				mv faculty.dat result/space/;;
+			all)
+				mkdir -p result/space
+
+				touch studyroom.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l1" = "Space_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
+
+					elif [ "$l1" = "StudyRoom" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
+					fi
+				done < space.dat
+				mv studyroom.dat result/space/
+
+				touch seat.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l1" = "Space_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
+
+					elif [ "$l1" = "Seat" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
+					fi
+				done < space.dat
+				mv seat.dat result/space/
+
+				touch undergraduate.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
+					elif [ "$l4" = "Undergraduate" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
+					fi
+				done < space.dat
+				mv undergraduate.dat result/space/
+
+				touch graduate.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
+					elif [ "$l4" = "Graduate" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
+					fi
+				done < space.dat
+				mv graduate.dat result/space/
+				
+				touch faculty.dat
+				while read l0 l1 l2 l3 l4 l5 l6 l7
+				do
+					if [ "$l4" = "Member_type" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
+					elif [ "$l4" = "Faculty" ]
+					then
+						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
+					fi
+				done < space.dat
+				mv faculty.dat result/space/;;
+		esac;;		
 	output)
 		;;
 	all)
