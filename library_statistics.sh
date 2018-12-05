@@ -492,7 +492,72 @@ case "$1" in
 				mv faculty.dat result/space/;;
 		esac;;		
 	output)
-		;;
+		case "$2" in
+			stat_table)
+				x0=0	
+				x1=0
+				x2=0
+				x3=0	
+				x4=0
+				x5=0
+				x6=0	
+				x7=0
+				x8=0
+				x9=0	
+				x10=0
+				x11=0
+				x12=0	
+				x13=0
+				x14=0
+				x15=0	
+				x16=0
+				x17=0
+				mkdir -p result/output
+				touch stat_table.dat
+				echo "Return_code	Number" >> stat_table.dat
+				while read l0 l1 l2
+				do
+					case "$l1" in
+						-1)((x0++));;
+						0) ((x1++)) ;;
+						1) ((x2++));;
+						2) ((x3++));;
+						3) ((x4++));;
+						4) ((x5++));;
+						5) ((x6++));;
+						6) ((x7++));;
+						7) ((x8++));;
+						8) ((x9++));;
+						9) ((x10++));;
+						10) ((x11++));;
+						11) ((x12++));;
+						12) ((x13++));;
+						13) ((x14++));;
+						14) ((x15++));;
+						15) ((x16++));;
+						16) ((x17++));;
+					esac
+				done < output.dat
+				echo "-1	$x0" >> stat_table.dat
+				echo "0	$x1" >> stat_table.dat
+				echo "1	$x2" >> stat_table.dat
+				echo "2	$x3" >> stat_table.dat
+				echo "3	$x4" >> stat_table.dat
+				echo "4	$x5" >> stat_table.dat
+				echo "5	$x6" >> stat_table.dat
+				echo "6	$x7" >> stat_table.dat
+				echo "7	$x8" >> stat_table.dat
+				echo "8	$x9" >> stat_table.dat
+				echo "9	$x10" >> stat_table.dat
+				echo "10	$x11" >> stat_table.dat
+				echo "11	$x12" >> stat_table.dat
+				echo "12	$x13" >> stat_table.dat
+				echo "13	$x14" >> stat_table.dat
+				echo "14	$x15" >> stat_table.dat
+				echo "15	$x16" >> stat_table.dat
+				echo "16	$x17" >> stat_table.dat
+				mv stat_table.dat result/output/;;
+		esac;;
 	all)
 				;;	
 esac		
