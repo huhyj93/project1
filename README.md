@@ -49,7 +49,7 @@ case "$1" in
 
 ```````````
 
-두번째는 input.dat 파일을 이용하는 경우이다. 뒤에 두번째 명령어가 book, e-book, magazine, undergraduate, graduate, faculty일 경우에 따라 input 파일을 바꿔주고 이를 이용해서 ** ./hello ** 명령어를 통해서 output.dat를 새로 만들어서 각각 디렉토리로 옮긴다.
+두번째는 input.dat 파일을 이용하는 경우이다. 뒤에 두번째 명령어가 book, e-book, magazine, undergraduate, graduate, faculty일 경우에 따라 input 파일을 바꿔주고 이를 이용해서 **./hello** 명령어를 통해서 output.dat를 새로 만들어서 각각 디렉토리로 옮긴다.
 
 추가적으로 date부분을 만들어야 했다. 이 부분은 아래 코드를 보면 알 수 있듯이 년도는 360, 월은 30을 곱해서 시간 숫자를 만들었고 입력한 숫자와 비교할 수 있게 했다.  
 
