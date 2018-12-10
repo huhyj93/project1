@@ -1,4 +1,12 @@
 #!/bin/bash
+if [ ! -f hello ]
+then
+	make
+fi
+if [ -d result ]
+then
+	rm -r result
+fi
 case "$1" in
 	resource)
 		case "$2" in
@@ -105,7 +113,6 @@ case "$1" in
 			date)
 				
 				mkdir -p result/input
-
 				touch date.dat
 				while read l0 l1 l2 l3 l4 l5
 				do
@@ -119,7 +126,16 @@ case "$1" in
 						fi
 					fi
 				done < input.dat
-				mv date.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp date.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat date.dat
+				cp output.dat result/input/date.dat;;
 
 			book)
 				mkdir -p result/input
@@ -136,7 +152,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> book.dat
 					fi
 				done < input.dat
-				mv book.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat book.dat
+				cp output.dat result/input/book.dat;;
 
 			e-book)
 				mkdir -p result/input
@@ -153,7 +178,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> e-book.dat
 					fi
 				done < input.dat
-				mv e-book.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp e-book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat e-book.dat
+				cp output.dat result/input/e-book.dat;;
 
 			magazine)
 				mkdir -p result/input
@@ -170,7 +204,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> magazine.dat
 					fi
 				done < input.dat
-				mv magazine.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp magazine.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat magazine.dat
+				cp output.dat result/input/magazine.dat;;
 
 			undergraduate)
 
@@ -188,7 +231,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> undergraduate.dat
 					fi
 				done < input.dat
-				mv undergraduate.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp undergraduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat undergraduate.dat
+				cp output.dat result/input/undergraduate.dat;;
 
 			graduate)
 
@@ -206,7 +258,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> graduate.dat
 					fi
 				done < input.dat
-				mv graduate.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat graduate.dat
+				cp output.dat result/input/graduate.dat;;
 
 			faculty)
 				
@@ -224,7 +285,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> faculty.dat
 					fi
 				done < input.dat
-				mv faculty.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/input/faculty.dat;;
+
 
 			all)
 				mkdir -p result/input
@@ -241,7 +312,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> book.dat
 					fi
 				done < input.dat
-				mv book.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat book.dat
+				cp output.dat result/input/book.dat
 
 				touch e-book.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -255,7 +335,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> e-book.dat
 					fi
 				done < input.dat
-				mv e-book.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp e-book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat e-book.dat
+				cp output.dat result/input/e-book.dat
 		
 				touch magazine.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -269,7 +358,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> magazine.dat
 					fi
 				done < input.dat
-				mv magazine.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp magazine.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat magazine.dat
+				cp output.dat result/input/magazine.dat
 
 				touch undergraduate.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -283,7 +381,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> undergraduate.dat
 					fi
 				done < input.dat
-				mv undergraduate.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp undergraduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat undergraduate.dat
+				cp output.dat result/input/undergraduate.dat
 
 				touch graduate.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -297,7 +404,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> graduate.dat
 					fi
 				done < input.dat
-				mv graduate.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat graduate.dat
+				cp output.dat result/input/graduate.dat
 
 				touch faculty.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -311,7 +427,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> faculty.dat
 					fi
 				done < input.dat
-				mv faculty.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/input/faculty.dat;;
 		esac;;		
 	space)
 		case "$2" in
@@ -333,7 +458,16 @@ case "$1" in
 						fi
 					fi
 				done < space.dat
-				mv date.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp date.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat date.dat
+				cp output.dat result/space/date.dat;;
 			studyroom)
 				mkdir -p result/space
 				touch studyroom.dat
@@ -354,7 +488,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
 					fi
 				done < space.dat
-				mv studyroom.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp studyroom.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat studyroom.dat
+				cp output.dat result/space/studyroom.dat;;
+
 			seat)
 				mkdir -p result/space
 				touch seat.dat
@@ -374,7 +518,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
 					fi
 				done < space.dat
-				mv seat.dat result/space/;;	
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp seat.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat seat.dat
+				cp output.dat result/space/seat.dat;;	
+
 			undergraduate)
 				mkdir -p result/space
 				
@@ -389,7 +543,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
 					fi
 				done < space.dat
-				mv undergraduate.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp undergraduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat undergraduate.dat
+				cp output.dat result/space/undergraduate.dat;;
+
 			graduate)
 				mkdir -p result/space
 				
@@ -404,7 +568,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
 					fi
 				done < space.dat
-				mv graduate.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat graduate.dat
+				cp output.dat result/space/graduate.dat;;
+
 			faculty)
 				mkdir -p result/space
 				
@@ -419,7 +593,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
 					fi
 				done < space.dat
-				mv faculty.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/space/faculty.dat;;
 			all)
 				mkdir -p result/space
 
@@ -435,7 +618,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
 					fi
 				done < space.dat
-				mv studyroom.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp studyroom.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat studyroom.dat
+				cp output.dat result/space/studyroom.dat
 
 				touch seat.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -449,7 +641,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
 					fi
 				done < space.dat
-				mv seat.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp seat.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat seat.dat
+				cp output.dat result/space/seat.dat
 
 				touch undergraduate.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -462,7 +663,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
 					fi
 				done < space.dat
-				mv undergraduate.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp  undergraduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat  undergraduate.dat
+				cp output.dat result/space/undergraduate.dat
 
 				touch graduate.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -475,7 +685,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
 					fi
 				done < space.dat
-				mv graduate.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat  graduate.dat
+				cp output.dat result/space/graduate.dat
 				
 				touch faculty.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -488,7 +707,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
 					fi
 				done < space.dat
-				mv faculty.dat result/space/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/space/faculty.dat;;
 		esac;;		
 	output)
 		case "$2" in
@@ -616,7 +844,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> book.dat
 					fi
 				done < input.dat
-				mv book.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat book.dat
+				cp output.dat result/input/book.dat
 
 				touch e-book.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -630,7 +867,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> e-book.dat
 					fi
 				done < input.dat
-				mv e-book.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp e-book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat e-book.dat
+				cp output.dat result/input/e-book.dat
 		
 				touch magazine.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -644,7 +890,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> magazine.dat
 					fi
 				done < input.dat
-				mv magazine.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp magazine.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat magazine.dat
+				cp output.dat result/input/magazine.dat
 
 				touch undergraduate.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -658,7 +913,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> undergraduate.dat
 					fi
 				done < input.dat
-				mv undergraduate.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp undergraduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat undergraduate.dat
+				cp output.dat result/input/undergraduate.dat
 
 				touch graduate.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -672,7 +936,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> graduate.dat
 					fi
 				done < input.dat
-				mv graduate.dat result/input/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat graduate.dat
+				cp output.dat result/input/graduate.dat
 
 				touch faculty.dat
 				while read l0 l1 l2 l3 l4 l5
@@ -686,8 +959,17 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> faculty.dat
 					fi
 				done < input.dat
-				mv faculty.dat result/input/
-	
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/input/faculty.dat	
+
 				mkdir -p result/space
 
 				touch studyroom.dat
@@ -702,7 +984,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> studyroom.dat
 					fi
 				done < space.dat
-				mv studyroom.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp studyroom.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat studyroom.dat
+				cp output.dat result/space/studyroom.dat
 
 				touch seat.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -716,7 +1007,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> seat.dat
 					fi
 				done < space.dat
-				mv seat.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp seat.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat seat.dat
+				cp output.dat result/space/seat.dat
 
 				touch undergraduate.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -729,7 +1029,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> undergraduate.dat
 					fi
 				done < space.dat
-				mv undergraduate.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp  undergraduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat  undergraduate.dat
+				cp output.dat result/space/undergraduate.dat
 
 				touch graduate.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -742,7 +1051,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> graduate.dat
 					fi
 				done < space.dat
-				mv graduate.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp graduate.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat  graduate.dat
+				cp output.dat result/space/graduate.dat
 				
 				touch faculty.dat
 				while read l0 l1 l2 l3 l4 l5 l6 l7
@@ -755,7 +1073,16 @@ case "$1" in
 						echo "$l0	$l1	$l2	$l3	$l4	$l5	$l6	$l7" >> faculty.dat
 					fi
 				done < space.dat
-				mv faculty.dat result/space/
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp faculty.dat space.dat
+				./hello
+				rm space.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat faculty.dat
+				cp output.dat result/space/faculty.dat
 
 				x0=0	
 				x1=0
@@ -776,6 +1103,7 @@ case "$1" in
 				x16=0
 				x17=0
 				mkdir -p result/output
+				./hello
 				touch stat_table.dat
 				echo "Return_code	Number" >> stat_table.dat
 				while read l0 l1 l2
@@ -819,5 +1147,5 @@ case "$1" in
 				echo "14	$x15" >> stat_table.dat
 				echo "15	$x16" >> stat_table.dat
 				echo "16	$x17" >> stat_table.dat
-				mv stat_table.dat result/output/;;	
+				mv stat_table.dat result/output/;;
 esac		
