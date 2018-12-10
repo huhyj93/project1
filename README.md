@@ -2,10 +2,22 @@
 
 Project4는 Shell script를 이용해서 project1,2,3에서 이용하는 dat파일을 정리하는 폴더와 파일을 만드는 과제이다. 
 
-이전 프로젝트에서 이용하는 input.dat, resource.dat, space.dat, output.dat 파일을 각각 주어진 방식에 따라 정리하는 것이다.
+이전 프로젝트에서 이용하는 input.dat, resource.dat, space.dat을 주어진 방식으로 정리해서 output 만들어 정리하는 것이다.
 
 ## Running
 
+처음에 실행 파일인 hello 여부를 확인해서 make 작업을 다시하게 했고, result 디렉토리를 확인해서 있을 경우 제거한다.
+
+```````````
+if [ ! -f hello ]
+then
+	make
+fi
+if [ -d result ]
+then
+	rm -r result
+fi
+````````
 만들어야 되는 종류는 input.dat, resource.dat, space.dat, output.dat으로 크게 4가지 종류로 나뉜다.
 
 먼저, resource.dat를 이용해서 만드는 명렁어 파트이다. 
@@ -37,7 +49,7 @@ case "$1" in
 
 ```````````
 
-두번째는 input.dat 파일을 이용하는 경우이다. 뒤에 두번째 명령어가 book, e-book, magazine, undergraduate, graduate, faculty일 경우에는 앞에 방식과 마찬가지로 쓰면 된다.
+두번째는 input.dat 파일을 이용하는 경우이다. 뒤에 두번째 명령어가 book, e-book, magazine, undergraduate, graduate, faculty일 경우에 따라 input 파일을 바꿔주고 이를 이용해서 ** ./hello ** 명령어를 통해서 output.dat를 새로 만들어서 각각 디렉토리로 옮긴다.
 
 추가적으로 date부분을 만들어야 했다. 이 부분은 아래 코드를 보면 알 수 있듯이 년도는 360, 월은 30을 곱해서 시간 숫자를 만들었고 입력한 숫자와 비교할 수 있게 했다.  
 
@@ -63,7 +75,16 @@ All인 경우에는 date를 제외한 모든 파일을 만들 수 있도록 했�
 						fi
 					fi
 				done < input.dat
-				mv date.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp date.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat date.dat
+				cp output.dat result/input/date.dat;;
 
 			book)
 				mkdir -p result/input
@@ -80,7 +101,16 @@ All인 경우에는 date를 제외한 모든 파일을 만들 수 있도록 했�
 						echo "$l0	$l1	$l2	$l3	$l4	$l5" >> book.dat
 					fi
 				done < input.dat
-				mv book.dat result/input/;;
+				cp input.dat temp.dat
+				cp space.dat temp2.dat
+				rm input.dat space.dat
+				cp book.dat input.dat
+				./hello
+				rm input.dat
+				cp temp.dat input.dat
+				cp temp2.dat space.dat
+				rm temp.dat temp2.dat book.dat
+				cp output.dat result/input/book.dat;;
 
 ``````````````````
 
@@ -222,4 +252,3 @@ All인 경우에는 date를 제외한 모든 파일을 만들 수 있도록 했�
  Using **shell script** in Ubuntu environment
 
 ## Author : Yang Jun Huh
-
